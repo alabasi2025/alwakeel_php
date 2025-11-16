@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once 'sidebar.php';
 
 // معالجة طلبات AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -157,8 +158,18 @@ function processMessage($message, $command_id, $conn) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
+        }
+        
+        /* تعديل لتفادي التداخل مع Sidebar */
+        @media (min-width: 769px) {
+            body {
+                margin-right: 300px;
+            }
+        }
+        
+        body {
             flex-direction: column;
         }
         

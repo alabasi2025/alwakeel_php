@@ -1,3 +1,4 @@
+<?php require_once 'sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -21,6 +22,13 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+        
+        /* تعديل لتفادي التداخل مع Sidebar */
+        @media (min-width: 769px) {
+            body {
+                margin-right: 300px;
+            }
         }
         
         .header {
