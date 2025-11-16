@@ -220,6 +220,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </li>
         <li>
+            <a href="changelog.php" class="<?php echo ($current_page == 'changelog.php') ? 'active' : ''; ?>">
+                <span class="sidebar-icon">📋</span>
+                <span>سجل التحديثات</span>
+            </a>
+        </li>
+        <li>
             <a href="https://github.com/alabasi2025/alwakeel_php" target="_blank">
                 <span class="sidebar-icon">🐙</span>
                 <span>GitHub</span>
