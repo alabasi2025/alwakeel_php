@@ -1,0 +1,42 @@
+# الملفات الحساسة
+config.php
+.env
+
+# النسخ الاحتياطية
+backups/
+*.zip
+*.sql.gz
+
+# ملفات GitHub المؤقتة
+github_temp/
+*.tmp
+
+# ملفات النظام
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ملفات المحررات
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ملفات PHP
+*.log
+error_log
+php_errors.log
+
+# ملفات Composer (إذا استخدمت لاحقاً)
+vendor/
+composer.lock
+
+# ملفات Node.js (إذا استخدمت لاحقاً)
+node_modules/
+package-lock.json
+
+# ملفات مؤقتة
+temp/
+tmp/
+cache/
