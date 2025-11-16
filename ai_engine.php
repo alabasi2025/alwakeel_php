@@ -41,8 +41,10 @@ class AIEngine {
                      strpos($message_lower, 'شرح') !== false ||
                      strpos($message_lower, 'اقتراح') !== false;
         
-        // استخدام Copilot للطلبات المعقدة، Ollama للبسيطة
-        if ($is_complex && isset($this->integrations['copilot'])) {
+        // أولوية المحركات: OpenAI > Copilot > Ollama > Local
+        if (isset($this->integrations['openai'])) {
+            return $this->processOpenAI($message, $context);
+        } elseif ($is_complex && isset($this->integrations['copilot'])) {
             return $this->processCopilot($message, $context);
         } elseif (isset($this->integrations['ollama'])) {
             return $this->processOllama($message, $context);
@@ -75,8 +77,11 @@ class AIEngine {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            // اختيار النموذج المناسب
+            $model = $this->integrations['ollama']['default_model'] ?? 'deepseek-r1:8b';
+            
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-                'model' => 'llama2', // أو أي نموذج آخر متاح
+                'model' => $model,
                 'prompt' => $prompt,
                 'stream' => false
             ]));
@@ -92,7 +97,7 @@ class AIEngine {
                     'success' => true,
                     'message' => $result['response'] ?? 'لا يوجد رد',
                     'engine' => 'ollama',
-                    'model' => 'llama2'
+                    'model' => $model
                 ];
             } else {
                 throw new Exception("فشل الاتصال بـ Ollama (HTTP {$http_code})");
@@ -105,6 +110,91 @@ class AIEngine {
                 'message' => 'فشل الاتصال بـ Ollama المحلي',
                 'error' => $e->getMessage(),
                 'engine' => 'ollama'
+            ];
+        }
+    }
+    
+    /**
+     * معالجة باستخدام OpenAI API
+     */
+    private function processOpenAI($message, $context = []) {
+        if (!isset($this->integrations['openai'])) {
+            return [
+                'success' => false,
+                'message' => 'OpenAI غير مفعّل',
+                'engine' => 'none'
+            ];
+        }
+        
+        $api_key = $this->integrations['openai']['api_key'];
+        $model = $this->integrations['openai']['model'] ?? 'gpt-3.5-turbo';
+        $max_tokens = $this->integrations['openai']['max_tokens'] ?? 500;
+        $temperature = $this->integrations['openai']['temperature'] ?? 0.7;
+        
+        try {
+            // بناء الرسائل
+            $messages = [
+                [
+                    'role' => 'system',
+                    'content' => 'أنت وكيل ذكي متخصص في إدارة المشاريع والتطوير. تساعد المستخدمين في GitHub، Hostinger، SQL، والنسخ الاحتياطي. أجب بالعربية بشكل واضح ومفيد.'
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $message
+                ]
+            ];
+            
+            // إضافة السياق إذا وُجد
+            if (!empty($context)) {
+                array_splice($messages, 1, 0, [[
+                    'role' => 'assistant',
+                    'content' => 'السياق السابق: ' . json_encode($context, JSON_UNESCAPED_UNICODE)
+                ]]);
+            }
+            
+            // استدعاء OpenAI API
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/chat/completions');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $api_key
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+                'model' => $model,
+                'messages' => $messages,
+                'temperature' => $temperature,
+                'max_tokens' => $max_tokens
+            ]));
+            
+            $response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($http_code === 200) {
+                $result = json_decode($response, true);
+                
+                return [
+                    'success' => true,
+                    'message' => $result['choices'][0]['message']['content'] ?? 'لا يوجد رد',
+                    'engine' => 'openai',
+                    'model' => $model,
+                    'tokens' => $result['usage']['total_tokens'] ?? 0
+                ];
+            } else {
+                $error_response = json_decode($response, true);
+                $error_message = $error_response['error']['message'] ?? "HTTP {$http_code}";
+                throw new Exception("فشل الاتصال بـ OpenAI API: {$error_message}");
+            }
+            
+        } catch (Exception $e) {
+            error_log("خطأ OpenAI: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'فشل الاتصال بـ OpenAI API',
+                'error' => $e->getMessage(),
+                'engine' => 'openai'
             ];
         }
     }

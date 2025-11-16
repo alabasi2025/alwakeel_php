@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'sidebar.php';
+require_once 'ai_engine.php';
 
 // معالجة طلبات AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -83,10 +84,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 /**
- * معالجة الرسالة وإرجاع الرد
- * (سيتم ربطها بمحرك AI في المرحلة التالية)
+ * معالجة الرسالة وإرجاع الرد عبر محرك AI
  */
 function processMessage($message, $command_id, $conn) {
+    // محاولة استخدام محرك AI
+    try {
+        $ai_engine = new AIEngine($conn);
+        $ai_response = $ai_engine->routeRequest($message);
+        
+        if ($ai_response['success']) {
+            $response = $ai_response['message'];
+            $response .= "\n\n🤖 *محرك: {$ai_response['engine']} | نموذج: {$ai_response['model']}*";
+        } else {
+            // Fallback إلى المعالجة المحلية
+            $response = processMessageLocal($message);
+        }
+    } catch (Exception $e) {
+        error_log("خطأ AI Engine: " . $e->getMessage());
+        $response = processMessageLocal($message);
+    }
+    
+    // حفظ الرد في قاعدة البيانات
+    try {
+        $stmt = $conn->prepare("INSERT INTO results (command_id, result_text) VALUES (:command_id, :result_text)");
+        $stmt->execute([
+            ':command_id' => $command_id,
+            ':result_text' => $response
+        ]);
+        
+        // تحديث حالة الأمر
+        $stmt = $conn->prepare("UPDATE commands SET status = 'completed' WHERE id = :id");
+        $stmt->execute([':id' => $command_id]);
+        
+    } catch (PDOException $e) {
+        error_log("خطأ في حفظ الرد: " . $e->getMessage());
+    }
+    
+    return $response;
+}
+
+/**
+ * معالجة محلية بسيطة (Fallback)
+ */
+function processMessageLocal($message) {
     $message_lower = mb_strtolower($message);
     
     // تحليل بسيط للرسالة
@@ -116,27 +156,10 @@ function processMessage($message, $command_id, $conn) {
         
     } else {
         $response = "فهمت رسالتك: \"$message\"\n\n" .
-                   "سأقوم بمعالجتها عبر محرك الذكاء الاصطناعي. " .
-                   "يمكنك أيضاً استخدام الأوامر المباشرة مثل:\n" .
-                   "- سحب من GitHub\n" .
-                   "- نشر على Hostinger\n" .
-                   "- إنشاء نسخة احتياطية";
-    }
-    
-    // حفظ الرد في قاعدة البيانات
-    try {
-        $stmt = $conn->prepare("INSERT INTO results (command_id, result_text) VALUES (:command_id, :result_text)");
-        $stmt->execute([
-            ':command_id' => $command_id,
-            ':result_text' => $response
-        ]);
-        
-        // تحديث حالة الأمر
-        $stmt = $conn->prepare("UPDATE commands SET status = 'completed' WHERE id = :id");
-        $stmt->execute([':id' => $command_id]);
-        
-    } catch (PDOException $e) {
-        error_log("خطأ في حفظ الرد: " . $e->getMessage());
+                   "للحصول على أفضل النتائج:\n" .
+                   "• فعّل Ollama للذكاء الاصطناعي المحلي\n" .
+                   "• فعّل Copilot للتحليل المتقدم\n" .
+                   "• استخدم الأوامر المباشرة (GitHub, SQL, Backup)";
     }
     
     return $response;

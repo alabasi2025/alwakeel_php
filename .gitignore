@@ -1,6 +1,11 @@
 # الملفات الحساسة
 config.php
 .env
+setup_openai.php
+OPENAI_SETUP.md
+*.key
+*.secret
+config.local.php
 
 # النسخ الاحتياطية
 backups/

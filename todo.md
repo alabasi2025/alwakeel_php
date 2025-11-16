@@ -92,5 +92,22 @@
 - [x] إضافة Sidebar إلى chat.php
 - [x] إضافة Sidebar إلى integrations.php
 - [x] إضافة Sidebar إلى sync_engine.php
+- [x] رفع التحديثات إلى GitHub
+- [x] نشر على Hostinger
+
+## 🤖 ربط Ollama المحلي
+- [x] تحديد مسار Ollama: D:\AAAAAA\ollama\models
+- [x] إنشاء setup_ollama.php لحفظ الإعدادات
+- [x] تحديث ai_engine.php لدعم النماذج الجديدة (deepseek-r1:8b)
+- [x] تحديث chat.php للاتصال بـ ai_engine.php
+- [ ] اختبار الاتصال بـ Ollama محلياً
 - [ ] رفع التحديثات إلى GitHub
 - [ ] نشر على Hostinger
+
+## 🌐 ربط OpenAI API (للسيرفر السحابي)
+- [x] إنشاء setup_openai.php لحفظ API Key
+- [x] تحديث ai_engine.php لدعم OpenAI بشكل كامل
+- [x] إنشاء test_openai.php لاختبار الاتصال
+- [ ] رفع التحديثات إلى GitHub
+- [ ] نشر على Hostinger
+- [ ] اختبار على Hostinger
