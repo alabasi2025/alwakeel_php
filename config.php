@@ -6,9 +6,9 @@
 
 // إعدادات قاعدة البيانات
 define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'alwakeel_db');
+define('DB_USER', 'u306850950_root');
+define('DB_PASS', 'Sholh781166666');
+define('DB_NAME', 'u306850950_alwakeel_db');
 
 // إعدادات عامة
 define('CHARSET', 'utf8mb4');

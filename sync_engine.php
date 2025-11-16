@@ -1,6 +1,9 @@
 <?php
 require_once 'config.php';
 
+// الحصول على اتصال قاعدة البيانات
+$conn = getDBConnection();
+
 /**
  * محرك المزامنة - Sync Engine
  * يدير عمليات المزامنة مع GitHub و Hostinger

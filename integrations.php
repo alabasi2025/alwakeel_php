@@ -1,6 +1,9 @@
 <?php
 require_once 'config.php';
 
+// الحصول على اتصال قاعدة البيانات
+$conn = getDBConnection();
+
 // معالجة حفظ الإعدادات
 $message = '';
 $message_type = '';
