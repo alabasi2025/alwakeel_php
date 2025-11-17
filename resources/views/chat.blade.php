@@ -301,13 +301,125 @@ function addMessageToUI(message, sender, source = null) {
 loadConversations();
 
 // تصدير جميع المحادثات إلى TXT
-document.getElementById('export-all-txt-btn').addEventListener('click', function() {
-    window.location.href = '/export-all-conversations?format=txt';
+document.getElementById('export-all-txt-btn').addEventListener('click', async function() {
+    try {
+        const response = await fetch('/conversations');
+        const conversations = await response.json();
+        
+        let content = "===========================================\n";
+        content += "جميع المحادثات\n";
+        content += "تاريخ التصدير: " + new Date().toLocaleString('ar-SA') + "\n";
+        content += "عدد المحادثات: " + conversations.length + "\n";
+        content += "===========================================\n\n";
+        
+        for (const conv of conversations) {
+            const convResponse = await fetch(`/conversations/${conv.id}`);
+            const convData = await convResponse.json();
+            
+            content += "\n\n";
+            content += "###########################################################\n";
+            content += `# محادثة: ${convData.title}\n`;
+            content += `# التاريخ: ${new Date(convData.created_at).toLocaleString('ar-SA')}\n`;
+            content += "###########################################################\n\n";
+            
+            for (const msg of convData.messages) {
+                const role = msg.role === 'user' ? 'أنت' : 'الوكيل';
+                const provider = msg.ai_provider ? ` (${msg.ai_provider})` : '';
+                content += `${role}${provider}:\n`;
+                content += msg.content + "\n";
+                content += "-------------------------------------------\n\n";
+            }
+        }
+        
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `all_conversations_${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        alert('✅ تم تصدير المحادثات بنجاح!');
+    } catch (error) {
+        alert('❌ حدث خطأ في التصدير: ' + error.message);
+    }
 });
 
 // تصدير جميع المحادثات إلى HTML
-document.getElementById('export-all-html-btn').addEventListener('click', function() {
-    window.location.href = '/export-all-conversations?format=html';
+document.getElementById('export-all-html-btn').addEventListener('click', async function() {
+    try {
+        const response = await fetch('/conversations');
+        const conversations = await response.json();
+        
+        let html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>جميع المحادثات</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        h1 { color: #667eea; text-align: center; }
+        .meta { text-align: center; color: #666; margin-bottom: 30px; }
+        .conversation { margin-bottom: 40px; padding: 20px; background: #fafafa; border-radius: 8px; }
+        .conversation-title { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .message { margin-bottom: 15px; padding: 12px; border-radius: 6px; }
+        .message.user { background: #e3f2fd; border-right: 3px solid #2196f3; }
+        .message.assistant { background: #f3e5f5; border-right: 3px solid #9c27b0; }
+        .message-role { font-weight: bold; margin-bottom: 5px; }
+        .message-content { line-height: 1.6; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 جميع المحادثات</h1>
+        <div class="meta">
+            <p>📅 تاريخ التصدير: ${new Date().toLocaleString('ar-SA')}</p>
+            <p>📊 عدد المحادثات: ${conversations.length}</p>
+        </div>`;
+        
+        for (const conv of conversations) {
+            const convResponse = await fetch(`/conversations/${conv.id}`);
+            const convData = await convResponse.json();
+            
+            html += `
+        <div class="conversation">
+            <div class="conversation-title">💬 ${convData.title}</div>
+            <div style="color: #666; font-size: 14px; margin-bottom: 15px;">📅 ${new Date(convData.created_at).toLocaleString('ar-SA')}</div>`;
+            
+            for (const msg of convData.messages) {
+                const role = msg.role === 'user' ? '👤 أنت' : '🤖 الوكيل';
+                const provider = msg.ai_provider ? ` (${msg.ai_provider})` : '';
+                const className = msg.role;
+                
+                html += `
+            <div class="message ${className}">
+                <div class="message-role">${role}${provider}</div>
+                <div class="message-content">${msg.content.replace(/\n/g, '<br>')}</div>
+            </div>`;
+            }
+            
+            html += `
+        </div>`;
+        }
+        
+        html += `
+    </div>
+</body>
+</html>`;
+        
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `all_conversations_${new Date().toISOString().slice(0,10)}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        alert('✅ تم تصدير المحادثات بنجاح!');
+    } catch (error) {
+        alert('❌ حدث خطأ في التصدير: ' + error.message);
+    }
 });
 </script>
 @endsection
