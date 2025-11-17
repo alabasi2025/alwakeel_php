@@ -9,7 +9,7 @@ class GeminiService
 {
     private $apiKey;
     private $apiEndpoint = 'https://generativelanguage.googleapis.com';
-    private $model = 'gemini-pro';
+    private $model = 'gemini-2.5-flash';
     
     public function __construct($apiKey = null)
     {
