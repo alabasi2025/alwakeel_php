@@ -25,6 +25,9 @@
                 <a href="{{ route('chat') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('chat') ? 'bg-white/20' : '' }}">
                     💬 الدردشة الذكية
                 </a>
+                <a href="{{ route('terminal') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('terminal') ? 'bg-white/20' : '' }}">
+                    ⚡ الطرفية (Terminal)
+                </a>
                 <a href="{{ route('integrations') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('integrations') ? 'bg-white/20' : '' }}">
                     🔗 التكاملات
                 </a>

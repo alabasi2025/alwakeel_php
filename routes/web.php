@@ -53,3 +53,9 @@ Route::delete('/conversations-all', [App\Http\Controllers\ConversationController
 // Export routes (يجب أن تكون قبل {id} لتجنب التعارض)
 Route::get('/export-all-conversations', [App\Http\Controllers\ExportController::class, 'exportAll'])->name('conversations.export-all');
 Route::get('/conversations/{id}/export', [App\Http\Controllers\ExportController::class, 'exportConversation'])->name('conversations.export');
+
+// Terminal Routes
+Route::get('/terminal', [App\Http\Controllers\TerminalController::class, 'index'])->name('terminal');
+Route::post('/terminal/execute', [App\Http\Controllers\TerminalController::class, 'execute']);
+Route::get('/terminal/history', [App\Http\Controllers\TerminalController::class, 'history']);
+Route::post('/terminal/clear', [App\Http\Controllers\TerminalController::class, 'clear']);
