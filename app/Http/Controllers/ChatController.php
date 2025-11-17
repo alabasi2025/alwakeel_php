@@ -6,6 +6,7 @@ use App\Models\LearningData;
 use App\Models\Integration;
 use App\Services\OpenAIService;
 use App\Services\ManusService;
+use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -26,7 +27,7 @@ class ChatController extends Controller
     public function send(Request $request)
     {
         $message = $request->input('message');
-        $aiMode = $request->input('ai_mode', 'auto'); // auto, manus, openai
+        $aiMode = $request->input('ai_mode', 'auto'); // auto, manus, openai, gemini
         $response = null;
         $source = 'unknown';
         
@@ -55,21 +56,40 @@ class ChatController extends Controller
                     $aiMode = $this->detectBestAI($message);
                 }
                 
-                if ($aiMode === 'manus') {
-                    // استخدام Manus AI
-                    $result = $this->tryManus($message);
-                    if ($result['success']) {
-                        $response = $result['response'];
-                        $source = 'manus';
-                    } else {
-                        // فشل Manus، نحاول OpenAI كبديل
+                // اختيار الـ AI المناسب
+                switch ($aiMode) {
+                    case 'gemini':
+                        $result = $this->tryGemini($message);
+                        if ($result['success']) {
+                            $response = $result['response'];
+                            $source = 'gemini';
+                        } else {
+                            throw new \Exception($result['error']);
+                        }
+                        break;
+                        
+                    case 'manus':
+                        $result = $this->tryManus($message);
+                        if ($result['success']) {
+                            $response = $result['response'];
+                            $source = 'manus';
+                        } else {
+                            // فشل Manus، نحاول Gemini كبديل
+                            $result = $this->tryGemini($message);
+                            if ($result['success']) {
+                                $response = $result['response'];
+                                $source = 'gemini';
+                            } else {
+                                throw new \Exception($result['error']);
+                            }
+                        }
+                        break;
+                        
+                    case 'openai':
+                    default:
                         $response = $this->tryOpenAI($message);
                         $source = 'openai';
-                    }
-                } else {
-                    // استخدام OpenAI
-                    $response = $this->tryOpenAI($message);
-                    $source = 'openai';
+                        break;
                 }
             }
             
@@ -106,8 +126,42 @@ class ChatController extends Controller
             }
         }
         
-        // أسئلة بسيطة (OpenAI)
-        return 'openai';
+        // أسئلة بسيطة - نستخدم Gemini المجاني
+        return 'gemini';
+    }
+    
+    /**
+     * محاولة استخدام Google Gemini
+     */
+    private function tryGemini($message)
+    {
+        // محاولة الحصول على إعدادات Gemini من قاعدة البيانات
+        $geminiIntegration = Integration::where('service_name', 'gemini')
+            ->where('is_enabled', true)
+            ->first();
+        
+        $apiKey = null;
+        if ($geminiIntegration) {
+            $config = json_decode($geminiIntegration->config, true);
+            $apiKey = $config['api_key'] ?? null;
+        }
+        
+        $geminiService = new GeminiService($apiKey);
+        
+        if (!$geminiService->isEnabled()) {
+            return ['success' => false, 'error' => 'Gemini غير مفعل. يرجى إضافة مفتاح API من صفحة التكاملات.'];
+        }
+        
+        $systemPrompt = "أنت وكيل ذكي مساعد باللغة العربية. مهمتك مساعدة المستخدمين بشكل دقيق ومفيد. أجب بطريقة واضحة ومختصرة.";
+        
+        $result = $geminiService->chat($systemPrompt, $message);
+        
+        if ($result['success']) {
+            // حفظ في قاعدة التعلم
+            $this->saveToLearningDatabase($message, $result['response'], 'gemini', json_encode($result['data']));
+        }
+        
+        return $result;
     }
     
     /**
@@ -129,24 +183,16 @@ class ChatController extends Controller
             $config['api_endpoint'] ?? 'https://api.manus.ai'
         );
         
-        $result = $manusService->createTask($message, 'speed');
+        $systemPrompt = "أنت وكيل ذكي مساعد باللغة العربية. مهمتك مساعدة المستخدمين بشكل دقيق ومفيد. أجب بطريقة واضحة ومختصرة.";
+        
+        $result = $manusService->chat($systemPrompt, $message);
         
         if ($result['success']) {
-            $taskUrl = $result['data']['task_url'] ?? '';
-            $taskId = $result['data']['task_id'] ?? '';
-            
-            $response = "✅ تم إنشاء مهمة في Manus AI بنجاح!\n\n";
-            $response .= "🔗 رابط المهمة: {$taskUrl}\n";
-            $response .= "🆔 معرف المهمة: {$taskId}\n\n";
-            $response .= "يمكنك متابعة تقدم المهمة من خلال الرابط أعلاه.";
-            
             // حفظ في قاعدة التعلم
-            $this->saveToLearningDatabase($message, $response, 'manus', json_encode($result['data']));
-            
-            return ['success' => true, 'response' => $response];
+            $this->saveToLearningDatabase($message, $result['response'], 'manus', json_encode($result['data']));
         }
         
-        return ['success' => false, 'error' => $result['error'] ?? 'فشل الاتصال بـ Manus'];
+        return $result;
     }
     
     /**

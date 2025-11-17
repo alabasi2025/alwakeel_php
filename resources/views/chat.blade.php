@@ -21,13 +21,17 @@
                     <span class="text-sm font-medium">🤖 Manus AI</span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition">
+                    <input type="radio" name="ai-mode" value="gemini" class="text-green-600">
+                    <span class="text-sm font-medium">🌟 Gemini</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition">
                     <input type="radio" name="ai-mode" value="openai" class="text-blue-600">
                     <span class="text-sm font-medium">⚡ OpenAI</span>
                 </label>
             </div>
         </div>
         <div id="mode-description" class="mt-4 text-sm text-gray-700 bg-white rounded-lg p-3">
-            <strong>التلقائي:</strong> النظام يختار الأنسب بناءً على نوع السؤال (مهام معقدة → Manus، أسئلة سريعة → OpenAI)
+            <strong>التلقائي:</strong> النظام يختار الأنسب بناءً على نوع السؤال (مهام معقدة → Manus، أسئلة سريعة → Gemini المجاني)
         </div>
     </div>
 
@@ -46,7 +50,8 @@
 document.querySelectorAll('input[name="ai-mode"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
         const descriptions = {
-            'auto': '<strong>التلقائي:</strong> النظام يختار الأنسب بناءً على نوع السؤال (مهام معقدة → Manus، أسئلة سريعة → OpenAI)',
+            'auto': '<strong>التلقائي:</strong> النظام يختار الأنسب بناءً على نوع السؤال (مهام معقدة → Manus، أسئلة سريعة → Gemini)',
+            'gemini': '<strong>Gemini (مجاني):</strong> من Google - للدردشة السريعة والأسئلة العامة، مجاني بالكامل!',
             'manus': '<strong>Manus AI:</strong> للمهام المعقدة - البحث المتقدم، إنشاء المستندات، تطوير الويب، والتحليل العميق',
             'openai': '<strong>OpenAI:</strong> للدردشة السريعة - إجابات فورية على الأسئلة العامة والمحادثات البسيطة'
         };
@@ -90,7 +95,7 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
         document.getElementById(loadingId).remove();
         
         // Add AI response with source indicator
-        const sourceEmoji = data.source === 'manus' ? '🤖' : (data.source === 'openai' ? '⚡' : '🎯');
+        const sourceEmoji = data.source === 'manus' ? '🤖' : (data.source === 'openai' ? '⚡' : (data.source === 'gemini' ? '🌟' : '🎯'));
         messagesDiv.innerHTML += `<div class="text-left"><span class="inline-block bg-gray-100 px-4 py-2 rounded-lg">${sourceEmoji} ${data.response}</span></div>`;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     } catch (error) {
