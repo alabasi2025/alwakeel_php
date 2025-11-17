@@ -15,9 +15,17 @@
             <!-- قائمة المحادثات ستظهر هنا -->
         </div>
         
-        <button id="delete-all-btn" class="mt-4 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm">
-            🗑️ حذف الكل
-        </button>
+        <div class="mt-4 space-y-2">
+            <button id="export-all-txt-btn" class="w-full px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm">
+                📄 تصدير الكل (TXT)
+            </button>
+            <button id="export-all-html-btn" class="w-full px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
+                📕 تصدير الكل (HTML)
+            </button>
+            <button id="delete-all-btn" class="w-full px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm">
+                🗑️ حذف الكل
+            </button>
+        </div>
     </div>
 
     <!-- Main Chat Area -->
@@ -291,5 +299,15 @@ function addMessageToUI(message, sender, source = null) {
 
 // تحميل المحادثات عند تحميل الصفحة
 loadConversations();
+
+// تصدير جميع المحادثات إلى TXT
+document.getElementById('export-all-txt-btn').addEventListener('click', function() {
+    window.location.href = '/conversations/export-all?format=txt';
+});
+
+// تصدير جميع المحادثات إلى HTML
+document.getElementById('export-all-html-btn').addEventListener('click', function() {
+    window.location.href = '/conversations/export-all?format=html';
+});
 </script>
 @endsection
