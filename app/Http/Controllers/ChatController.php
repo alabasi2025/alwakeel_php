@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\LearningData;
+use App\Models\Integration;
 use App\Services\OpenAIService;
+use App\Services\ManusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,6 +26,7 @@ class ChatController extends Controller
     public function send(Request $request)
     {
         $message = $request->input('message');
+        $aiMode = $request->input('ai_mode', 'auto'); // auto, manus, openai
         $response = null;
         $source = 'unknown';
         
@@ -44,51 +48,153 @@ class ChatController extends Controller
                     'similarity' => $this->calculateSimilarity($message, $similarQuestion->user_input)
                 ]);
             } else {
-                // لم نجد سؤال مشابه - نستخدم OpenAI
-                if ($this->openAI->isEnabled()) {
-                    $systemPrompt = "أنت وكيل ذكي مساعد باللغة العربية. مهمتك مساعدة المستخدمين بشكل دقيق ومفيد. أجب بطريقة واضحة ومختصرة.";
-                    
-                    $result = $this->openAI->chat($message, $systemPrompt);
-                    
+                // لم نجد سؤال مشابه - نستخدم AI حسب الاختيار
+                
+                if ($aiMode === 'auto') {
+                    // الوضع التلقائي: نحدد الأنسب بناءً على نوع السؤال
+                    $aiMode = $this->detectBestAI($message);
+                }
+                
+                if ($aiMode === 'manus') {
+                    // استخدام Manus AI
+                    $result = $this->tryManus($message);
                     if ($result['success']) {
                         $response = $result['response'];
-                        $source = 'openai';
-                        
-                        // حفظ السؤال والجواب في قاعدة البيانات للتعلم
-                        $this->saveToLearningDatabase($message, $response, $source);
-                        
-                        Log::info('استخدام OpenAI للرد', [
-                            'question' => $message,
-                            'tokens_used' => $result['usage']['total_tokens'] ?? 0
-                        ]);
+                        $source = 'manus';
                     } else {
-                        $response = "عذراً، حدث خطأ في الاتصال بالذكاء الاصطناعي: " . $result['error'];
-                        $source = 'error';
+                        // فشل Manus، نحاول OpenAI كبديل
+                        $response = $this->tryOpenAI($message);
+                        $source = 'openai';
                     }
                 } else {
-                    // OpenAI غير مفعّل - رد بسيط
-                    $response = "مرحباً! أنا الوكيل الذكي. حالياً لم يتم ربطي بأي خدمة ذكاء اصطناعي. يرجى تفعيل OpenAI من صفحة التكاملات لأتمكن من مساعدتك بشكل أفضل.";
-                    $source = 'fallback';
+                    // استخدام OpenAI
+                    $response = $this->tryOpenAI($message);
+                    $source = 'openai';
                 }
             }
             
             return response()->json([
+                'success' => true,
                 'response' => $response,
-                'source' => $source,
-                'learned' => $source === 'learning_database'
+                'source' => $source
             ]);
             
         } catch (\Exception $e) {
-            Log::error('خطأ في ChatController', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+            Log::error('خطأ في معالجة الرسالة: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'response' => 'عذراً، حدث خطأ في معالجة رسالتك: ' . $e->getMessage(),
+                'source' => 'error'
+            ], 500);
+        }
+    }
+    
+    /**
+     * تحديد أفضل AI بناءً على نوع السؤال
+     */
+    private function detectBestAI($message)
+    {
+        // كلمات مفتاحية تدل على مهام معقدة (Manus)
+        $complexKeywords = [
+            'ابحث', 'اكتب', 'أنشئ', 'طور', 'صمم', 'حلل', 'قارن', 'اشرح بالتفصيل',
+            'مستند', 'تقرير', 'عرض تقديمي', 'موقع', 'برنامج', 'كود'
+        ];
+        
+        foreach ($complexKeywords as $keyword) {
+            if (mb_stripos($message, $keyword) !== false) {
+                return 'manus';
+            }
+        }
+        
+        // أسئلة بسيطة (OpenAI)
+        return 'openai';
+    }
+    
+    /**
+     * محاولة استخدام Manus AI
+     */
+    private function tryManus($message)
+    {
+        $manusIntegration = Integration::where('service_name', 'manus')
+            ->where('is_enabled', true)
+            ->first();
+        
+        if (!$manusIntegration) {
+            return ['success' => false, 'error' => 'Manus AI غير مفعل'];
+        }
+        
+        $config = json_decode($manusIntegration->config, true);
+        $manusService = new ManusService(
+            $config['api_key'], 
+            $config['api_endpoint'] ?? 'https://api.manus.ai'
+        );
+        
+        $result = $manusService->createTask($message, 'speed');
+        
+        if ($result['success']) {
+            $taskUrl = $result['data']['task_url'] ?? '';
+            $taskId = $result['data']['task_id'] ?? '';
+            
+            $response = "✅ تم إنشاء مهمة في Manus AI بنجاح!\n\n";
+            $response .= "🔗 رابط المهمة: {$taskUrl}\n";
+            $response .= "🆔 معرف المهمة: {$taskId}\n\n";
+            $response .= "يمكنك متابعة تقدم المهمة من خلال الرابط أعلاه.";
+            
+            // حفظ في قاعدة التعلم
+            $this->saveToLearningDatabase($message, $response, 'manus', json_encode($result['data']));
+            
+            return ['success' => true, 'response' => $response];
+        }
+        
+        return ['success' => false, 'error' => $result['error'] ?? 'فشل الاتصال بـ Manus'];
+    }
+    
+    /**
+     * محاولة استخدام OpenAI
+     */
+    private function tryOpenAI($message)
+    {
+        if ($this->openAI->isEnabled()) {
+            $systemPrompt = "أنت وكيل ذكي مساعد باللغة العربية. مهمتك مساعدة المستخدمين بشكل دقيق ومفيد. أجب بطريقة واضحة ومختصرة.";
+            
+            $result = $this->openAI->chat($systemPrompt, $message);
+            
+            if ($result['success']) {
+                $response = $result['response'];
+                
+                // حفظ في قاعدة التعلم
+                $this->saveToLearningDatabase($message, $response, 'openai', json_encode($result));
+                
+                return $response;
+            } else {
+                throw new \Exception('خطأ في الاتصال بـ OpenAI: ' . $result['error']);
+            }
+        } else {
+            throw new \Exception('OpenAI غير مفعل. يرجى تفعيله من صفحة التكاملات.');
+        }
+    }
+    
+    /**
+     * حفظ السؤال والجواب في قاعدة التعلم
+     */
+    private function saveToLearningDatabase($question, $answer, $source, $metadata = null)
+    {
+        try {
+            LearningData::create([
+                'user_input' => $question,
+                'system_response' => $answer,
+                'context' => $source,
+                'success_score' => 1.0,
+                'metadata' => $metadata,
+                'usage_count' => 1
             ]);
             
-            return response()->json([
-                'response' => "عذراً، حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
-                'source' => 'error',
-                'error' => $e->getMessage()
-            ], 500);
+            Log::info('تم حفظ السؤال والجواب في قاعدة التعلم', [
+                'question' => $question,
+                'source' => $source
+            ]);
+        } catch (\Exception $e) {
+            Log::error('فشل حفظ البيانات في قاعدة التعلم: ' . $e->getMessage());
         }
     }
     
@@ -97,65 +203,54 @@ class ChatController extends Controller
      */
     private function findSimilarQuestion($question)
     {
-        // البحث عن أسئلة مشابهة باستخدام LIKE
-        $questions = LearningData::where('success_score', '>=', 0.7)
-            ->orderBy('usage_count', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get();
+        // البحث البسيط - يمكن تحسينه لاحقاً باستخدام خوارزميات أكثر تقدماً
+        $allQuestions = LearningData::where('success_score', '>=', 0.7)->get();
         
         $bestMatch = null;
         $bestSimilarity = 0;
         
-        foreach ($questions as $q) {
-            $similarity = $this->calculateSimilarity($question, $q->user_input);
+        foreach ($allQuestions as $learningData) {
+            $similarity = $this->calculateSimilarity($question, $learningData->user_input);
             
-            if ($similarity > $bestSimilarity && $similarity >= 0.75) {
+            if ($similarity > $bestSimilarity) {
                 $bestSimilarity = $similarity;
-                $bestMatch = $q;
+                $bestMatch = $learningData;
             }
         }
         
-        return $bestMatch;
+        // نعتبر التشابه جيد إذا كان أكثر من 80%
+        if ($bestMatch && $bestSimilarity >= 0.8) {
+            $bestMatch->success_score = $bestSimilarity;
+            return $bestMatch;
+        }
+        
+        return null;
     }
     
     /**
-     * حساب نسبة التشابه بين سؤالين
+     * حساب نسبة التشابه بين نصين
      */
-    private function calculateSimilarity($str1, $str2)
+    private function calculateSimilarity($text1, $text2)
     {
         // تنظيف النصوص
-        $str1 = mb_strtolower(trim($str1));
-        $str2 = mb_strtolower(trim($str2));
+        $text1 = mb_strtolower(trim($text1));
+        $text2 = mb_strtolower(trim($text2));
         
-        // إذا كانت النصوص متطابقة تماماً
-        if ($str1 === $str2) {
+        // إذا كانا متطابقين تماماً
+        if ($text1 === $text2) {
             return 1.0;
         }
         
-        // حساب نسبة التشابه باستخدام similar_text
-        similar_text($str1, $str2, $percent);
+        // حساب Levenshtein distance
+        $distance = levenshtein($text1, $text2);
+        $maxLength = max(mb_strlen($text1), mb_strlen($text2));
         
-        return $percent / 100;
-    }
-    
-    /**
-     * حفظ السؤال والجواب في قاعدة البيانات للتعلم
-     */
-    private function saveToLearningDatabase($question, $answer, $source)
-    {
-        try {
-            LearningData::create([
-                'user_input' => $question,
-                'system_response' => $answer,
-                'success_score' => 1.0, // يمكن تحسينها لاحقاً بناءً على تقييم المستخدم
-                'source' => $source,
-                'usage_count' => 1
-            ]);
-        } catch (\Exception $e) {
-            Log::error('فشل حفظ البيانات للتعلم', [
-                'error' => $e->getMessage()
-            ]);
+        if ($maxLength == 0) {
+            return 1.0;
         }
+        
+        $similarity = 1 - ($distance / $maxLength);
+        
+        return max(0, $similarity);
     }
 }
