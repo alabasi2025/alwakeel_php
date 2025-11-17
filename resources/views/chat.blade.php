@@ -302,12 +302,12 @@ loadConversations();
 
 // تصدير جميع المحادثات إلى TXT
 document.getElementById('export-all-txt-btn').addEventListener('click', function() {
-    window.location.href = '/conversations/export-all?format=txt';
+    window.location.href = '/export-all-conversations?format=txt';
 });
 
 // تصدير جميع المحادثات إلى HTML
 document.getElementById('export-all-html-btn').addEventListener('click', function() {
-    window.location.href = '/conversations/export-all?format=html';
+    window.location.href = '/export-all-conversations?format=html';
 });
 </script>
 @endsection

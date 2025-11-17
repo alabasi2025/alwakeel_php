@@ -50,6 +50,6 @@ Route::get('/conversations/{id}', [App\Http\Controllers\ConversationController::
 Route::delete('/conversations/{id}', [App\Http\Controllers\ConversationController::class, 'destroy']);
 Route::delete('/conversations-all', [App\Http\Controllers\ConversationController::class, 'destroyAll']);
 
-// Export routes
+// Export routes (يجب أن تكون قبل {id} لتجنب التعارض)
+Route::get('/export-all-conversations', [App\Http\Controllers\ExportController::class, 'exportAll'])->name('conversations.export-all');
 Route::get('/conversations/{id}/export', [App\Http\Controllers\ExportController::class, 'exportConversation'])->name('conversations.export');
-Route::get('/conversations/export-all', [App\Http\Controllers\ExportController::class, 'exportAll'])->name('conversations.export-all');
