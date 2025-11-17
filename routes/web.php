@@ -24,6 +24,8 @@ Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 // Integrations (التكاملات)
 Route::get('/integrations', [IntegrationController::class, 'index'])->name('integrations');
 Route::post('/integrations/save', [IntegrationController::class, 'save'])->name('integrations.save');
+Route::post('/integrations/openai/save', [IntegrationController::class, 'saveOpenAI'])->name('integrations.openai.save');
+Route::post('/integrations/openai/test', [IntegrationController::class, 'testOpenAI'])->name('integrations.openai.test');
 
 // Sync Engine (محرك المزامنة)
 Route::get('/sync', [SyncController::class, 'index'])->name('sync');
