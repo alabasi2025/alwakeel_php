@@ -11,5 +11,5 @@
 - [x] حذف البيانات القديمة من MySQL
 - [x] تشغيل Migrations على MySQL
 - [x] اختبار السيرفر (يعمل!)
-- [ ] رفع إلى GitHub
-- [ ] نشر على Hostinger
+- [x] رفع إلى GitHub
+- [ ] نشر على Hostinger (يدوياً)
