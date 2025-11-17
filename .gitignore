@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# SSH Keys (المفتاح الخاص محمي)
+.ssh/alwakeel_hostinger_key
+.ssh/known_hosts
