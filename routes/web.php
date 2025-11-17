@@ -42,3 +42,10 @@ Route::get('/backup/download/{filename}', [BackupController::class, 'download'])
 
 // Changelog (سجل التحديثات)
 Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
+
+// Conversation routes
+Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index']);
+Route::post('/conversations', [App\Http\Controllers\ConversationController::class, 'store']);
+Route::get('/conversations/{id}', [App\Http\Controllers\ConversationController::class, 'show']);
+Route::delete('/conversations/{id}', [App\Http\Controllers\ConversationController::class, 'destroy']);
+Route::delete('/conversations-all', [App\Http\Controllers\ConversationController::class, 'destroyAll']);

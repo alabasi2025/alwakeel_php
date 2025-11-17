@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\LearningData;
 use App\Models\Integration;
+use App\Models\Conversation;
+use App\Models\ConversationMessage;
 use App\Services\OpenAIService;
 use App\Services\ManusService;
 use App\Services\GeminiService;
@@ -28,8 +30,24 @@ class ChatController extends Controller
     {
         $message = $request->input('message');
         $aiMode = $request->input('ai_mode', 'auto'); // auto, manus, openai, gemini
+        $conversationId = $request->input('conversation_id');
         $response = null;
         $source = 'unknown';
+        
+        // إنشاء محادثة جديدة إذا لم تكن موجودة
+        if (!$conversationId) {
+            $conversation = Conversation::create(['last_message_at' => now()]);
+            $conversationId = $conversation->id;
+        } else {
+            $conversation = Conversation::findOrFail($conversationId);
+        }
+        
+        // حفظ رسالة المستخدم
+        ConversationMessage::create([
+            'conversation_id' => $conversationId,
+            'role' => 'user',
+            'content' => $message,
+        ]);
         
         try {
             // المرحلة 1: البحث في قاعدة البيانات عن أسئلة مشابهة
@@ -93,10 +111,23 @@ class ChatController extends Controller
                 }
             }
             
+            // حفظ رد الـ AI
+            ConversationMessage::create([
+                'conversation_id' => $conversationId,
+                'role' => 'assistant',
+                'content' => $response,
+                'ai_source' => $source,
+            ]);
+            
+            // تحديث عنوان المحادثة تلقائياً
+            $conversation->updateTitle();
+            $conversation->update(['last_message_at' => now()]);
+            
             return response()->json([
                 'success' => true,
                 'response' => $response,
-                'source' => $source
+                'source' => $source,
+                'conversation_id' => $conversationId
             ]);
             
         } catch (\Exception $e) {
