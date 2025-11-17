@@ -1,0 +1,65 @@
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Try the new cross-platform PowerShell https://aka.ms/pscore6
+
+PS C:\WINDOWS\system32> cd C:\xampp\htdocs\alwakeel_php
+PS C:\xampp\htdocs\alwakeel_php>
+PS C:\xampp\htdocs\alwakeel_php> git remote set-url origin git@github.com:alabasi2025/alwakeel_php.git
+fatal: not a git repository (or any of the parent directories): .git
+PS C:\xampp\htdocs\alwakeel_php> git remote -v
+fatal: not a git repository (or any of the parent directories): .git
+PS C:\xampp\htdocs\alwakeel_php> ssh -T git@github.com
+The authenticity of host 'github.com (140.82.121.4)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+Host key verification failed.
+PS C:\xampp\htdocs\alwakeel_php> git init
+Initialized empty Git repository in C:/xampp/htdocs/alwakeel_php/.git/
+PS C:\xampp\htdocs\alwakeel_php>
+PS C:\xampp\htdocs\alwakeel_php> git remote add origin git@github.com:alabasi2025/alwakeel_php.git
+PS C:\xampp\htdocs\alwakeel_php> ssh -T git@github.com
+The authenticity of host 'github.com (140.82.121.3)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? ssh -T git@github.com
+Please type 'yes', 'no' or the fingerprint:
+Host key verification failed.
+PS C:\xampp\htdocs\alwakeel_php> ssh -T git@github.com
+The authenticity of host 'github.com (140.82.121.3)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+git@github.com: Permission denied (publickey).
+PS C:\xampp\htdocs\alwakeel_php> git pull origin main
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+PS C:\xampp\htdocs\alwakeel_php> git branch -M main
+PS C:\xampp\htdocs\alwakeel_php> git branch --set-upstream-to=origin/main main
+fatal: no commit on branch 'main' yet
+PS C:\xampp\htdocs\alwakeel_php> git init
+Reinitialized existing Git repository in C:/xampp/htdocs/alwakeel_php/.git/
+PS C:\xampp\htdocs\alwakeel_php> git remote add origin git@github.com:alabasi2025/alwakeel_php.git
+error: remote origin already exists.
+PS C:\xampp\htdocs\alwakeel_php> ssh -T git@github.com
+git@github.com: Permission denied (publickey).
+PS C:\xampp\htdocs\alwakeel_php> git pull origin main
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+PS C:\xampp\htdocs\alwakeel_php> git branch -M main
+PS C:\xampp\htdocs\alwakeel_php> git branch --set-upstream-to=origin/main main
+fatal: no commit on branch 'main' yet
+PS C:\xampp\htdocs\alwakeel_php> git pull origin main --allow-unrelated-histories
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.

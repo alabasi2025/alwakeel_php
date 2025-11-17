@@ -1,0 +1,83 @@
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Try the new cross-platform PowerShell https://aka.ms/pscore6
+
+PS C:\WINDOWS\system32> Start-Process "explorer.exe" "C:\xampp\htdocs\alwakeel_php"
+PS C:\WINDOWS\system32> Start-Process "http://localhost/alwakeel_php/alwakeel.php"
+PS C:\WINDOWS\system32> # التحقق من وجود الملفات وإصلاح المشكلة
+PS C:\WINDOWS\system32> Write-Host "`n?? جاري التحقق من التثبيت..." -ForegroundColor Cyan
+
+🔍 جاري التحقق من التثبيت...
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> $xamppPath = "C:\xampp"
+PS C:\WINDOWS\system32> $projectPath = "$xamppPath\htdocs\alwakeel_php"
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # فحص وجود المجلد
+PS C:\WINDOWS\system32> if (Test-Path $projectPath) {
+>>     Write-Host "? المجلد موجود: $projectPath" -ForegroundColor Green
+>>
+>>     # عرض الملفات
+>>     Write-Host "`n?? الملفات الموجودة:" -ForegroundColor Cyan
+>>     Get-ChildItem $projectPath | ForEach-Object { Write-Host "   $_" -ForegroundColor Yellow }
+>>
+>>     # التحقق من الملفات المطلوبة
+>>     $requiredFiles = @("config.php", "api.php", "alwakeel.php", "database.sql")
+>>     $missing = @()
+>>
+>>     foreach ($file in $requiredFiles) {
+>>         if (!(Test-Path "$projectPath\$file")) {
+>>             $missing += $file
+>>         }
+>>     }
+>>
+>>     if ($missing.Count -gt 0) {
+>>         Write-Host "`n? ملفات مفقودة:" -ForegroundColor Red
+>>         $missing | ForEach-Object { Write-Host "   $_" -ForegroundColor Red }
+>>         Write-Host "`n?? جاري إعادة التحميل..." -ForegroundColor Cyan
+>>
+>>         # حذف المجلد القديم
+>>         Remove-Item -Path $projectPath -Recurse -Force
+>>
+>>         # إعادة التحميل
+>>         cd $HOME\Downloads
+>>         Remove-Item -Path "alwakeel_php.zip" -Force -ErrorAction SilentlyContinue
+>>         Invoke-WebRequest -Uri "https://github.com/alabasi2025/alwakeel_php/archive/refs/heads/main.zip" -OutFile "alwakeel_php.zip"
+>>         Expand-Archive -Path "alwakeel_php.zip" -DestinationPath "$xamppPath\htdocs\" -Force
+>>
+>>         # إعادة تسمية المجلد
+>>         if (Test-Path "$xamppPath\htdocs\alwakeel_php-main" ) {
+>>             Remove-Item -Path $projectPath -Recurse -Force -ErrorAction SilentlyContinue
+>>             Rename-Item -Path "$xamppPath\htdocs\alwakeel_php-main" -NewName "alwakeel_php" -Force
+>>         }
+>>
+>>         Write-Host "? تم إعادة التحميل!" -ForegroundColor Green
+>>     } else {
+>>         Write-Host "`n? جميع الملفات موجودة!" -ForegroundColor Green
+>>     }
+>>
+>> } else {
+>>     Write-Host "? المجلد غير موجود!" -ForegroundColor Red
+>>     Write-Host "`n?? جاري التحميل..." -ForegroundColor Cyan
+>>
+>>     cd $HOME\Downloads
+>>     Invoke-WebRequest -Uri "https://github.com/alabasi2025/alwakeel_php/archive/refs/heads/main.zip" -OutFile "alwakeel_php.zip"
+>>     Expand-Archive -Path "alwakeel_php.zip" -DestinationPath "$xamppPath\htdocs\" -Force
+>>     Rename-Item -Path "$xamppPath\htdocs\alwakeel_php-main" -NewName "alwakeel_php" -Force
+>>
+>>     Write-Host "? تم التحميل!" -ForegroundColor Green
+>> }
+✅ المجلد موجود: C:\xampp\htdocs\alwakeel_php
+
+📂 الملفات الموجودة:
+   alwakeel.php
+   api.php
+   config.php
+   database.sql
+   README.txt
+
+✅ جميع الملفات موجودة!
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # فتح المجلد
+PS C:\WINDOWS\system32> Write-Host "`n?? فتح مجلد المشروع..." -ForegroundColor Cyan
+                                                                                                                        � فتح مجلد المشروع...                                                                                                  PS C:\WINDOWS\system32> Start-Process "explorer.exe" $projectPath                                                       PS C:\WINDOWS\system32>                                                                                                 

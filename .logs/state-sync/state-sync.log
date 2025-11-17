@@ -1,0 +1,87 @@
+{"time":"2025-11-15T22:53:45.797543667-05:00","level":"INFO","msg":"Sentry initialized","dsn":"https://962d173a894d***","environment":"PROD","release":"6.1.24","sandbox_id":"ifh4dmdilkwf5nm9yufq8"}
+{"time":"2025-11-15T22:53:45.798212044-05:00","level":"INFO","msg":"Sentry initialized successfully"}
+{"time":"2025-11-15T22:53:45.798223303-05:00","level":"INFO","msg":"State sync service starting","log_file":"/home/ubuntu/.logs/state-sync/state-sync.log"}
+{"time":"2025-11-15T22:53:45.79841902-05:00","level":"INFO","msg":"Starting state sync service"}
+{"time":"2025-11-15T22:53:45.798443142-05:00","level":"INFO","msg":"Pulling initial state from S3"}
+{"time":"2025-11-15T22:53:45.970844254-05:00","level":"INFO","msg":"Successfully pulled initial state","etag":"\"d895d984d18088e6db6a066db6441244\"","cookie_domains":39,"localStorage_domains":23}
+{"time":"2025-11-15T22:53:45.970892238-05:00","level":"INFO","msg":"Connecting to browser","port":"9222"}
+{"time":"2025-11-15T22:53:45.977091851-05:00","level":"INFO","msg":"Found chrome://newtab/ to reuse","target_id":"AD6DD027ABA869847235106EA355411B"}
+{"time":"2025-11-15T22:53:45.977162164-05:00","level":"INFO","msg":"Reusing existing target for cookie sync","target_id":"AD6DD027ABA869847235106EA355411B"}
+{"time":"2025-11-15T22:53:45.977176554-05:00","level":"INFO","msg":"Successfully connected to browser"}
+{"time":"2025-11-15T22:53:45.977180794-05:00","level":"INFO","msg":"Syncing state to browser"}
+{"time":"2025-11-15T22:53:45.977187549-05:00","level":"INFO","msg":"Syncing cookies to browser","cookie_count":228}
+{"time":"2025-11-15T22:53:46.081121713-05:00","level":"INFO","msg":"Successfully synced cookies to browser"}
+{"time":"2025-11-15T22:53:46.081164409-05:00","level":"INFO","msg":"Successfully synced state to browser"}
+{"time":"2025-11-15T22:53:46.081168739-05:00","level":"INFO","msg":"Setting up state watchers"}
+{"time":"2025-11-15T22:53:46.081175296-05:00","level":"INFO","msg":"Starting CDP watcher"}
+{"time":"2025-11-15T22:53:46.091351462-05:00","level":"INFO","msg":"Created hidden monitoring target","target_id":"00B7E2F7AA491662761975082DBB85C6"}
+{"time":"2025-11-15T22:53:46.091410569-05:00","level":"INFO","msg":"Using hidden target for monitoring (should not be visible)"}
+{"time":"2025-11-15T22:53:46.091417208-05:00","level":"INFO","msg":"State watchers setup complete"}
+{"time":"2025-11-15T22:53:46.09142121-05:00","level":"INFO","msg":"Waiting for browser to stabilize after cookie sync","delay":5000000000}
+{"time":"2025-11-15T22:53:46.091434541-05:00","level":"INFO","msg":"Starting target monitoring"}
+{"time":"2025-11-15T22:53:46.11378501-05:00","level":"INFO","msg":"Handling target","target_id":"AD6DD027ABA869847235106EA355411B","url":"chrome://newtab/"}
+{"time":"2025-11-15T22:53:51.094361948-05:00","level":"INFO","msg":"Browser stabilization complete, cookie polling started with current state as baseline"}
+{"time":"2025-11-15T22:53:51.094524262-05:00","level":"INFO","msg":"Wrote sync ready marker","path":"/home/ubuntu/.config/state-sync/.sync-ready"}
+{"time":"2025-11-15T22:53:51.094538986-05:00","level":"INFO","msg":"State sync service started successfully"}
+{"time":"2025-11-15T22:53:51.094518026-05:00","level":"INFO","msg":"Starting cookie polling","interval":1000000000}
+{"time":"2025-11-15T22:53:51.094603726-05:00","level":"INFO","msg":"Started watching config file","path":"/home/ubuntu/.config/state-sync/state-sync-config.yaml"}
+{"time":"2025-11-15T22:57:32.926266507-05:00","level":"INFO","msg":"Handling target","target_id":"FE0B2DB9581105281FD22E30804F7F8E","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T22:57:33.012461413-05:00","level":"INFO","msg":"Injected localStorage items","domain":"127.0.0.1","item_count":4}
+{"time":"2025-11-15T22:57:34.243966281-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-15T22:57:34.416839158-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":4,"remote_patches":7,"merged_patches":11}
+{"time":"2025-11-15T22:57:34.555224191-05:00","level":"INFO","msg":"Successfully pushed state to S3","etag":"\"fb05f235143a89e7287c266592dc12b3\""}
+{"time":"2025-11-15T22:57:37.904874632-05:00","level":"INFO","msg":"Handling target","target_id":"FE0B2DB9581105281FD22E30804F7F8E","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T22:57:37.96757718-05:00","level":"INFO","msg":"Injected localStorage items","domain":"127.0.0.1","item_count":4}
+{"time":"2025-11-15T22:57:41.423960646-05:00","level":"INFO","msg":"Handling target","target_id":"FE0B2DB9581105281FD22E30804F7F8E","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T22:57:41.426874458-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"manus-runtime-user-info","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T22:57:41.426893977-05:00","level":"ERROR","msg":"Failed to enable DOM storage events","target_id":"FE0B2DB9581105281FD22E30804F7F8E","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T22:57:41.436777542-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"sidebar-width","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T22:57:41.437448049-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"smart_accounting_current_unit","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T22:57:41.440488706-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"tree-menu-expanded","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:01:47.253734431-05:00","level":"INFO","msg":"Handling target","target_id":"5146F92ADCFEB01EAFE9DE5EE8AA6147","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T23:01:47.331391179-05:00","level":"INFO","msg":"Injected localStorage items","domain":"127.0.0.1","item_count":4}
+{"time":"2025-11-15T23:01:48.484235337-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-15T23:01:48.599653486-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":4,"remote_patches":1,"merged_patches":5}
+{"time":"2025-11-15T23:01:48.722924316-05:00","level":"INFO","msg":"Successfully pushed state to S3","etag":"\"1ad6db4168c22980b242a03ac8919f3a\""}
+{"time":"2025-11-15T23:01:52.243851751-05:00","level":"INFO","msg":"Handling target","target_id":"5146F92ADCFEB01EAFE9DE5EE8AA6147","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T23:01:52.256792504-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"manus-runtime-user-info","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:01:52.256965325-05:00","level":"ERROR","msg":"Failed to enable DOM storage events","target_id":"5146F92ADCFEB01EAFE9DE5EE8AA6147","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:01:52.286175785-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"sidebar-width","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:01:52.312025167-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"smart_accounting_current_unit","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:01:52.315819687-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"tree-menu-expanded","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:02:24.064891549-05:00","level":"INFO","msg":"Handling target","target_id":"5EADFEDFE13D400EE1B753BCAE0332D4","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T23:02:24.160413381-05:00","level":"INFO","msg":"Injected localStorage items","domain":"127.0.0.1","item_count":4}
+{"time":"2025-11-15T23:02:25.315399355-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-15T23:02:25.393588031-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":3,"remote_patches":4,"merged_patches":7}
+{"time":"2025-11-15T23:02:25.583244538-05:00","level":"INFO","msg":"Successfully pushed state to S3","etag":"\"2edd6f84d1f68b391bf9f34ff7c581d4\""}
+{"time":"2025-11-15T23:02:26.885915321-05:00","level":"INFO","msg":"Handling target","target_id":"5EADFEDFE13D400EE1B753BCAE0332D4","url":"http://127.0.0.1:3000/"}
+{"time":"2025-11-15T23:02:26.889740902-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"tree-menu-expanded","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:02:26.889740343-05:00","level":"ERROR","msg":"Failed to enable DOM storage events","target_id":"5EADFEDFE13D400EE1B753BCAE0332D4","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:02:26.894364057-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"manus-runtime-user-info","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:02:26.895286588-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"sidebar-width","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:02:26.900386063-05:00","level":"ERROR","msg":"Failed to inject localStorage item","domain":"127.0.0.1","key":"smart_accounting_current_unit","error":"No target with given id found (-32602)"}
+{"time":"2025-11-15T23:16:51.111129116-05:00","level":"INFO","msg":"Detected cookie changes, notifying listeners","patch_count":1,"time_since_last":9223372036854775807}
+{"time":"2025-11-15T23:16:51.301754766-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-15T23:16:51.405522517-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":1,"remote_patches":6,"merged_patches":7}
+{"time":"2025-11-15T23:16:51.41951206-05:00","level":"ERROR","msg":"Service error","error":"failed to push state: failed to apply merged patches: failed to apply patches: replace operation does not apply: doc is missing path: /cookies/.hostinger.com/__cf_bm/expires: missing value"}
+{"time":"2025-11-16T15:12:14.613309747-05:00","level":"INFO","msg":"Detected cookie changes, notifying listeners","patch_count":5,"time_since_last":57323972987499}
+{"time":"2025-11-16T15:12:15.264248865-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-16T15:12:15.515990299-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":5,"remote_patches":13,"merged_patches":13}
+{"time":"2025-11-16T15:12:15.802339366-05:00","level":"INFO","msg":"Successfully pushed state to S3","etag":"\"7925091549492630173241feb36dc8ab\""}
+{"time":"2025-11-16T17:13:19.757153275-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/alwakeel.php"}
+{"time":"2025-11-16T17:13:21.073096998-05:00","level":"INFO","msg":"Handling target","target_id":"AD6DD027ABA869847235106EA355411B","url":"chrome://newtab/"}
+{"time":"2025-11-16T17:13:21.080347303-05:00","level":"ERROR","msg":"Failed to enable DOM storage events","target_id":"AD6DD027ABA869847235106EA355411B","error":"No target with given id found (-32602)"}
+{"time":"2025-11-16T17:13:33.354238797-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/chat.php"}
+{"time":"2025-11-16T17:13:42.968499055-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/integrations.php"}
+{"time":"2025-11-16T17:13:55.289106823-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/sync_engine.php"}
+{"time":"2025-11-16T17:15:49.06272304-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/integrations.php"}
+{"time":"2025-11-16T17:15:59.419791327-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/sync_engine.php"}
+{"time":"2025-11-16T17:21:12.266949781-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://mediumturquoise-porcupine-839487.hostingersite.com/alwakeel.php"}
+{"time":"2025-11-16T17:37:47.148428304-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://ollama.com/"}
+{"time":"2025-11-16T17:37:47.2536089-05:00","level":"INFO","msg":"ERROR: received DOM.documentUpdated when there's no top-level frame"}
+{"time":"2025-11-16T17:37:47.641066708-05:00","level":"INFO","msg":"Detected cookie changes, notifying listeners","patch_count":1,"time_since_last":8733027678413}
+{"time":"2025-11-16T17:37:47.789168075-05:00","level":"INFO","msg":"Detected concurrent modification, resolving conflict"}
+{"time":"2025-11-16T17:37:47.915180504-05:00","level":"INFO","msg":"Merged conflicting changes","local_patches":1,"remote_patches":7,"merged_patches":8}
+{"time":"2025-11-16T17:37:48.06640787-05:00","level":"INFO","msg":"Successfully pushed state to S3","etag":"\"8da1b5e7af726ba0d2d41c95f03bb1d1\""}
+{"time":"2025-11-16T17:37:53.316381444-05:00","level":"INFO","msg":"Handling target","target_id":"7D701042A83B6078706E375AC9C2FCCB","url":"https://ollama.com/search"}
+{"time":"2025-11-16T17:37:53.675412865-05:00","level":"INFO","msg":"ERROR: received DOM.documentUpdated when there's no top-level frame"}

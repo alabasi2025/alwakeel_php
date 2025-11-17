@@ -1,0 +1,95 @@
+
+PS C:\Users\Asus SupeR - PC\Downloads> $content = Get-Content $file -Raw -Encoding UTF8
+PS C:\Users\Asus SupeR - PC\Downloads> $content = $content -replace '\xEF\xBB\xBF', ''  # إزالة BOM
+PS C:\Users\Asus SupeR - PC\Downloads> $content | Set-Content $file -Encoding UTF8 -NoNewline
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "? تم الإصلاح!" -ForegroundColor Green
+✅ تم الإصلاح!
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n?? اختبار API..." -ForegroundColor Cyan
+
+🧪 اختبار API...
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> $api = "http://localhost:8765/alwakeel_php/api.php"
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> # 1. إضافة أمر
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n1?? إضافة أمر..." -ForegroundColor Yellow
+
+1️⃣ إضافة أمر...
+PS C:\Users\Asus SupeR - PC\Downloads> $cmd = @{ command_text = "أمر تجريبي من PowerShell" } | ConvertTo-Json -Compress
+PS C:\Users\Asus SupeR - PC\Downloads> $result1 = Invoke-RestMethod -Uri "$api?action=add_command" -Method POST -Body $cmd -ContentType "application/json; charset=utf-8"
+Invoke-RestMethod : Invalid URI: The hostname could not be parsed.
+At line:1 char:12
++ $result1 = Invoke-RestMethod -Uri "$api?action=add_command" -Method P ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Invoke-RestMethod], UriFormatException
+    + FullyQualifiedErrorId : System.UriFormatException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   ? تم! رقم الأمر: $($result1.command_id )" -ForegroundColor Green
+   ✅ تم! رقم الأمر:
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> # 2. الحصول على الأوامر
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n2?? الحصول على الأوامر..." -ForegroundColor Yellow
+
+2️⃣ الحصول على الأوامر...
+PS C:\Users\Asus SupeR - PC\Downloads> $commands = Invoke-RestMethod -Uri "$api?action=get_commands"
+Invoke-RestMethod : Invalid URI: The hostname could not be parsed.
+At line:1 char:13
++ $commands = Invoke-RestMethod -Uri "$api?action=get_commands"
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Invoke-RestMethod], UriFormatException
+    + FullyQualifiedErrorId : System.UriFormatException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   ? عدد الأوامر: $($commands.count)" -ForegroundColor Green
+   ✅ عدد الأوامر: 1
+PS C:\Users\Asus SupeR - PC\Downloads> $commands | Select-Object -First 3 | Format-Table id, command_text, status, created_at
+
+// ������ ������
+define('SERVER_PORT', '8765');
+
+// ������ ������
+define('SERVER_PORT', '8765');
+{"success":false,"error":"\u0641\u0634\u0644 \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0642\u0627\u0639\u062f\u0629 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a: SQLSTATE[HY000] [1049] Unknown database 'alwakeel_db'"}
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> # 3. إضافة نتيجة
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n3?? إضافة نتيجة..." -ForegroundColor Yellow
+
+3️⃣ إضافة نتيجة...
+PS C:\Users\Asus SupeR - PC\Downloads> $res = @{
+>>     command_id = $result1.command_id
+>>     result_text = "تم التنفيذ بنجاح!"
+>> } | ConvertTo-Json -Compress
+PS C:\Users\Asus SupeR - PC\Downloads> $result2 = Invoke-RestMethod -Uri "$api?action=add_result" -Method POST -Body $res -ContentType "application/json; charset=utf-8"
+Invoke-RestMethod : Invalid URI: The hostname could not be parsed.
+At line:1 char:12
++ $result2 = Invoke-RestMethod -Uri "$api?action=add_result" -Method PO ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Invoke-RestMethod], UriFormatException
+    + FullyQualifiedErrorId : System.UriFormatException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   ? تم! رقم النتيجة: $($result2.result_id)" -ForegroundColor Green
+   ✅ تم! رقم النتيجة:
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> # 4. الإحصائيات
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n4?? الإحصائيات..." -ForegroundColor Yellow
+
+4️⃣ الإحصائيات...
+PS C:\Users\Asus SupeR - PC\Downloads> $stats = Invoke-RestMethod -Uri "$api?action=get_stats"
+Invoke-RestMethod : Invalid URI: The hostname could not be parsed.
+At line:1 char:10
++ $stats = Invoke-RestMethod -Uri "$api?action=get_stats"
++          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Invoke-RestMethod], UriFormatException
+    + FullyQualifiedErrorId : System.UriFormatException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   ?? إجمالي الأوامر: $($stats.data.total_commands)" -ForegroundColor Green
+   📊 إجمالي الأوامر:
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   ?? إجمالي النتائج: $($stats.data.total_results)" -ForegroundColor Green
+   📊 إجمالي النتائج:
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n? API يعمل بنجاح!" -ForegroundColor Green
+
+✅ API يعمل بنجاح!
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n?? استخدم هذا الرابط مع مانوس:" -ForegroundColor Cyan
+
+🔗 استخدم هذا الرابط مع مانوس:
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "   $api" -ForegroundColor Yellow

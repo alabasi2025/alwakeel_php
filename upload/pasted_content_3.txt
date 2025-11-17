@@ -1,0 +1,166 @@
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+                                                                                                                        Try the new cross-platform PowerShell https://aka.ms/pscore6                                                                                                                                                                                    PS C:\WINDOWS\system32> # تحميل XAMPP إذا لم يكن موجودا فك الضغط وفتح المتصفح                                           PS C:\WINDOWS\system32> if (!(Test-Path "C:\xampp\xampp-control.exe")) { Start-Process "https://www.apachefriends.org/download.html"; Write-Host "الرجاء تثبيت XAMPP أولا ثم أعد تشغيل هذا الأمر" -ForegroundColor Yellow; pause } else { cd $HOME\Downloads; Expand-Archive -Path "alwakeel_php_system.zip" -DestinationPath "C:\xampp\htdocs\" -Force; Start-Process "C:\xampp\xampp-control.exe"; Start-Sleep -Seconds 3; Start-Process "http://localhost/phpmyadmin"; Start-Process "explorer.exe" "C:\xampp\htdocs\alwakeel_php"; Write-Host "`n? تم فك الضغط بنجاح!" -ForegroundColor Green; Write-Host "?? الخطوات التالية:" -ForegroundColor Cyan; Write-Host "1. شغل Apache و MySQL من XAMPP Control Panel" -ForegroundColor Yellow; Write-Host "2. في phpMyAdmin: أنشئ قاعدة 'alwakeel_db' واستورد database.sql" -ForegroundColor Yellow; Write-Host "3. افتح: http://localhost/alwakeel_php/alwakeel.php" -ForegroundColor Yellow }
+Expand-Archive : The path 'alwakeel_php_system.zip' either does not exist or is not a valid file system path.
+At line:1 char:231
++ ... \Downloads; Expand-Archive -Path "alwakeel_php_system.zip" -Destinati ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (alwakeel_php_system.zip:String) [Expand-Archive], InvalidOperationExce
+   ption
+    + FullyQualifiedErrorId : ArchiveCmdletPathNotFound,Expand-Archive
+
+
+✅ تم فك الضغط بنجاح!
+📋 الخطوات التالية:
+1. شغل Apache و MySQL من XAMPP Control Panel
+2. في phpMyAdmin: أنشئ قاعدة 'alwakeel_db' واستورد database.sql
+3. افتح: http://localhost/alwakeel_php/alwakeel.php
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n?? جاري البحث عن XAMPP..." -ForegroundColor Cyan
+
+🔍 جاري البحث عن XAMPP...
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> $possiblePaths = @(
+>>     "C:\xampp",
+>>     "D:\xampp",
+>>     "E:\xampp",
+>>     "C:\Program Files\xampp",
+>>     "C:\Program Files (x86)\xampp",
+>>     "$env:USERPROFILE\xampp",
+>>     "C:\Apps\xampp"
+>> )
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> $xamppFound = $false
+PS C:\Users\Asus SupeR - PC\Downloads> $xamppPath = ""
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> foreach ($path in $possiblePaths) {
+>>     if (Test-Path "$path\xampp-control.exe") {
+>>         $xamppFound = $true
+>>         $xamppPath = $path
+>>         Write-Host "`n? تم العثور على XAMPP في:" -ForegroundColor Green
+>>         Write-Host "   $xamppPath" -ForegroundColor Yellow
+>>         Write-Host "`n?? المجلدات المهمة:" -ForegroundColor Cyan
+>>         Write-Host "   ? htdocs: $xamppPath\htdocs" -ForegroundColor White
+>>         Write-Host "   ? mysql: $xamppPath\mysql" -ForegroundColor White
+>>         Write-Host "   ? apache: $xamppPath\apache" -ForegroundColor White
+>>         Write-Host "   ? php: $xamppPath\php" -ForegroundColor White
+>>
+>>         Write-Host "`n?? الأوامر الجاهزة:" -ForegroundColor Cyan
+>>         Write-Host "   ? تشغيل XAMPP:" -ForegroundColor White
+>>         Write-Host "     Start-Process '$xamppPath\xampp-control.exe'" -ForegroundColor Gray
+>>         Write-Host "   ? فك الضغط للمشروع:" -ForegroundColor White
+>>         Write-Host "     Expand-Archive -Path '`$HOME\Downloads\alwakeel_php_system.zip' -DestinationPath '$xamppPath\htdocs\' -Force" -ForegroundColor Gray
+>>         Write-Host "   ? فتح htdocs:" -ForegroundColor White
+>>         Write-Host "     Start-Process 'explorer.exe' '$xamppPath\htdocs'" -ForegroundColor Gray
+>>
+>>         break
+>>     }
+>> }
+
+✅ تم العثور على XAMPP في:
+   C:\xampp
+
+📂 المجلدات المهمة:
+   • htdocs: C:\xampp\htdocs
+   • mysql: C:\xampp\mysql
+   • apache: C:\xampp\apache
+   • php: C:\xampp\php
+
+🚀 الأوامر الجاهزة:
+   • تشغيل XAMPP:
+     Start-Process 'C:\xampp\xampp-control.exe'
+   • فك الضغط للمشروع:
+     Expand-Archive -Path '$HOME\Downloads\alwakeel_php_system.zip' -DestinationPath 'C:\xampp\htdocs\' -Force
+   • فتح htdocs:
+     Start-Process 'explorer.exe' 'C:\xampp\htdocs'
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> if (!$xamppFound) {
+>>     Write-Host "`n? لم يتم العثور على XAMPP في المسارات الشائعة" -ForegroundColor Red
+>>     Write-Host "`n?? جاري البحث في كل القرص C:\ (قد يستغرق وقتا)..." -ForegroundColor Yellow
+>>
+>>     $found = Get-ChildItem -Path "C:\" -Filter "xampp-control.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+>>
+>>     if ($found) {
+>>         $xamppPath = Split-Path $found.FullName
+>>         Write-Host "`n? تم العثور على XAMPP في:" -ForegroundColor Green
+>>         Write-Host "   $xamppPath" -ForegroundColor Yellow
+>>     } else {
+>>         Write-Host "`n? XAMPP غير مثبت على جهازك" -ForegroundColor Red
+>>         Write-Host "`n?? تحميل XAMPP:" -ForegroundColor Cyan
+>>         Write-Host "   Start-Process 'https://www.apachefriends.org/download.html'" -ForegroundColor Gray
+>>
+>>         $download = Read-Host "`nهل تريد فتح صفحة التحميل الآن (Y/N )"
+>>         if ($download -eq "Y" -or $download -eq "y") {
+>>             Start-Process "https://www.apachefriends.org/download.html"                                              >>         }                                                                                                            >>     }                                                                                                                >> }                                                                                                                    PS C:\Users\Asus SupeR - PC\Downloads> # البحث عن XAMPP وتثبيت المشروع تلقائيا                                          PS C:\Users\Asus SupeR - PC\Downloads> $xampp = @("C:\xampp", "D:\xampp", "E:\xampp", "C:\Program Files\xampp", "C:\Program Files (x86)\xampp") | Where-Object { Test-Path "$_\xampp-control.exe" } | Select-Object -First 1                    PS C:\Users\Asus SupeR - PC\Downloads>                                                                                  PS C:\Users\Asus SupeR - PC\Downloads> if ($xampp) {                                                                    >>     Write-Host "? تم العثور على XAMPP: $xampp" -ForegroundColor Green                                                >>                                                                                                                      >>     # فك الضغط                                                                                                       >>     Write-Host "`n?? جاري فك الضغط..." -ForegroundColor Cyan                                                         >>     cd $HOME\Downloads                                                                                               >>     Expand-Archive -Path "alwakeel_php_system.zip" -DestinationPath "$xampp\htdocs\" -Force                          >>                                                                                                                      >>     Write-Host "? تم فك الضغط بنجاح!" -ForegroundColor Green                                                         >>                                                                                                                      >>     # تشغيل XAMPP                                                                                                    >>     Write-Host "`n?? جاري تشغيل XAMPP..." -ForegroundColor Cyan                                                      >>     Start-Process "$xampp\xampp-control.exe"                                                                         >>                                                                                                                      >>     Start-Sleep -Seconds 2                                                                                           >>                                                                                                                      >>     # فتح phpMyAdmin                                                                                                 >>     Write-Host "`n?? جاري فتح phpMyAdmin..." -ForegroundColor Cyan                                                   >>     Start-Process "http://localhost/phpmyadmin"                                                                      >>
+>>     # فتح مجلد المشروع
+>>     Write-Host "`n?? جاري فتح مجلد المشروع..." -ForegroundColor Cyan
+>>     Start-Process "explorer.exe" "$xampp\htdocs\alwakeel_php"
+>>
+>>     Write-Host "`n? اكتمل الإعداد!" -ForegroundColor Green
+>>     Write-Host "`n?? الخطوات التالية:" -ForegroundColor Cyan
+>>     Write-Host "1. شغل Apache و MySQL من XAMPP Control Panel" -ForegroundColor Yellow
+>>     Write-Host "2. في phpMyAdmin: أنشئ قاعدة 'alwakeel_db' واستورد database.sql" -ForegroundColor Yellow
+>>     Write-Host "3. افتح: http://localhost/alwakeel_php/alwakeel.php" -ForegroundColor Yellow
+>>
+>> } else {
+>>     Write-Host "? XAMPP غير مثبت" -ForegroundColor Red
+>>     Write-Host "`n?? حمل XAMPP من:" -ForegroundColor Yellow
+>>     Write-Host "https://www.apachefriends.org/download.html" -ForegroundColor Cyan
+>>     Start-Process "https://www.apachefriends.org/download.html"
+>> }
+✅ تم العثور على XAMPP: C:\xampp
+
+📦 جاري فك الضغط...
+Expand-Archive : The path 'alwakeel_php_system.zip' either does not exist or is not a valid file system path.
+At line:7 char:5
++     Expand-Archive -Path "alwakeel_php_system.zip" -DestinationPath " ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (alwakeel_php_system.zip:String) [Expand-Archive], InvalidOperationExce
+   ption
+    + FullyQualifiedErrorId : ArchiveCmdletPathNotFound,Expand-Archive
+
+✅ تم فك الضغط بنجاح!
+
+🚀 جاري تشغيل XAMPP...
+
+🌐 جاري فتح phpMyAdmin...
+
+📂 جاري فتح مجلد المشروع...
+
+✅ اكتمل الإعداد!
+
+📋 الخطوات التالية:
+1. شغل Apache و MySQL من XAMPP Control Panel
+2. في phpMyAdmin: أنشئ قاعدة 'alwakeel_db' واستورد database.sql
+3. افتح: http://localhost/alwakeel_php/alwakeel.php
+PS C:\Users\Asus SupeR - PC\Downloads> Write-Host "`n?? فحص جميع المسارات المحتملة لـ XAMPP:`n" -ForegroundColor Cyan
+
+🔍 فحص جميع المسارات المحتملة لـ XAMPP:
+
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> $paths = @(
+>>     "C:\xampp",
+>>     "D:\xampp",
+>>     "E:\xampp",
+>>     "C:\Program Files\xampp",
+>>     "C:\Program Files (x86 )\xampp",
+>>     "$env:USERPROFILE\xampp",
+>>     "C:\Apps\xampp",
+>>     "D:\Program Files\xampp"
+>> )
+PS C:\Users\Asus SupeR - PC\Downloads>
+PS C:\Users\Asus SupeR - PC\Downloads> foreach ($path in $paths) {
+>>     if (Test-Path "$path\xampp-control.exe") {
+>>         Write-Host "? $path" -ForegroundColor Green
+>>     } else {
+>>         Write-Host "? $path" -ForegroundColor Red
+>>     }
+>> }
+✅ C:\xampp
+❌ D:\xampp
+❌ E:\xampp
+❌ C:\Program Files\xampp
+❌ C:\Program Files (x86 )\xampp
+❌ C:\Users\Asus SupeR - PC\xampp
+❌ C:\Apps\xampp
+❌ D:\Program Files\xampp
+PS C:\Users\Asus SupeR - PC\Downloads>

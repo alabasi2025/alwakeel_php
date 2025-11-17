@@ -1,0 +1,56 @@
+
+    + CategoryInfo          : ObjectNotFound: (ollama:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\WINDOWS\system32> # 1. عرض محتويات مجلد Ollama
+PS C:\WINDOWS\system32> Get-ChildItem -Path "D:\AAAAAA\ollama" -Recurse | Select-Object FullName
+
+FullName
+--------
+D:\AAAAAA\ollama\blobs
+D:\AAAAAA\ollama\manifests
+D:\AAAAAA\ollama\blobs\sha256-120007c81bf8b4eb54e896a4a3e5ff9949f124b0ea42295277c8523f7fa9c7f6
+D:\AAAAAA\ollama\blobs\sha256-3116c52250752e00dd06b16382e952bd33c34fd79fc4fe3a5d2c77cf7de1b14b
+D:\AAAAAA\ollama\blobs\sha256-3f8eb4da87fa7a3c9da615036b0dc418d31fef2a30b115ff33562588b32c691d
+D:\AAAAAA\ollama\blobs\sha256-4fa551d4f938f68b8c1e6afa9d28befb70e3f33f75d0753248d530364aeea40f
+D:\AAAAAA\ollama\blobs\sha256-577073ffcc6ce95b9981eacc77d1039568639e5638e83044994560d9ef82ce1b
+D:\AAAAAA\ollama\blobs\sha256-6a0746a1ec1aef3e7ec53868f220ff6e389f6f8ef87a01d77c96807de94ca2aa
+D:\AAAAAA\ollama\blobs\sha256-6e4c38e1172f42fdbff13edf9a7a017679fb82b0fde415a3e8b3c31c6ed4a4e4
+D:\AAAAAA\ollama\blobs\sha256-7cd4618c1faf8b7233c6c906dac1694b6a47684b37b8895d470ac688520b9c01
+D:\AAAAAA\ollama\blobs\sha256-8ab4849b038cf0abc5b1c9b8ee1443dca6b93a045c2272180d985126eb40bf6f
+D:\AAAAAA\ollama\blobs\sha256-923426e76b183456b6aaca2c0538ae96f2de390cddc543278de025f714f79a03
+D:\AAAAAA\ollama\blobs\sha256-c5ad996bda6eed4df6e3b605a9869647624851ac248209d22fd5e2c0cc1121d3
+D:\AAAAAA\ollama\blobs\sha256-dd084c7d92a3c1c14cc09ae77153b903fd2024b64a100a0cc8ec9316063d2dbc
+D:\AAAAAA\ollama\blobs\sha256-e0a42594d802e5d31cdc786deb4823edb8adff66094d49de8fffe976d753e348
+D:\AAAAAA\ollama\blobs\sha256-e6a7edc1a4d7d9b2de136a221a57336b76316cfe53a252aeba814496c5ae439d
+D:\AAAAAA\ollama\blobs\sha256-ed8474dc73db8ca0d85c1958c91c3a444e13a469c2efb10cd777ca9baeaddcb7
+D:\AAAAAA\ollama\blobs\sha256-f64cd5418e4b038ef90cf5fab6eb7ce6ae8f18909416822751d3b9fca827c2ab
+D:\AAAAAA\ollama\manifests\registry.ollama.ai
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\deepseek-r1
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\gemma3
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\gpt-oss
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\llama3
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\deepseek-r1\8b
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\gemma3\1b
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\gpt-oss\120b-cloud
+D:\AAAAAA\ollama\manifests\registry.ollama.ai\library\llama3\8b
+
+
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # 2. البحث عن ملف ollama.exe تحديدا
+PS C:\WINDOWS\system32> Get-ChildItem -Path "D:\AAAAAA\ollama" -Filter "*.exe" -Recurse | Select-Object FullName
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # 3. التحقق من وجود Ollama في PATH
+PS C:\WINDOWS\system32> where.exe ollama
+INFO: Could not find files for the given pattern(s).
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> # 4. محاولة تشغيل Ollama
+PS C:\WINDOWS\system32> ollama --version
+ollama : The term 'ollama' is not recognized as the name of a cmdlet, function, script file, or operable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ ollama --version
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (ollama:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException

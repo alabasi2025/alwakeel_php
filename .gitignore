@@ -1,47 +1,19 @@
-# الملفات الحساسة
-config.php
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
 .env
-setup_openai.php
-OPENAI_SETUP.md
-*.key
-*.secret
-config.local.php
-
-# النسخ الاحتياطية
-backups/
-*.zip
-*.sql.gz
-
-# ملفات GitHub المؤقتة
-github_temp/
-*.tmp
-
-# ملفات النظام
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ملفات المحررات
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# ملفات PHP
-*.log
-error_log
-php_errors.log
-
-# ملفات Composer (إذا استخدمت لاحقاً)
-vendor/
-composer.lock
-
-# ملفات Node.js (إذا استخدمت لاحقاً)
-node_modules/
-package-lock.json
-
-# ملفات مؤقتة
-temp/
-tmp/
-cache/
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
