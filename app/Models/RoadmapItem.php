@@ -34,14 +34,13 @@ class RoadmapItem extends Model
     ];
 
     /**
-     * Get items by project
+     * Get items by project (scope)
      */
-    public static function byProject(string $project)
+    public function scopeByProject($query, string $project)
     {
-        return self::where('project', $project)
+        return $query->where('project', $project)
             ->orderBy('phase_number')
-            ->orderBy('order')
-            ->get();
+            ->orderBy('order');
     }
 
     /**
