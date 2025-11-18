@@ -50,6 +50,36 @@ Route::get('/roadmap/{item}', [RoadmapController::class, 'show'])->name('roadmap
 Route::post('/roadmap/{item}/status', [RoadmapController::class, 'updateStatus'])->name('roadmap.update-status');
 Route::post('/roadmap/{item}/progress', [RoadmapController::class, 'updateProgress'])->name('roadmap.update-progress');
 
+// Feature Details (تفاصيل الميزات)
+Route::get('/features/{item}/edit', [App\Http\Controllers\FeatureDetailController::class, 'edit'])->name('features.edit');
+Route::post('/features/{item}/update', [App\Http\Controllers\FeatureDetailController::class, 'update'])->name('features.update');
+Route::post('/features/{item}/upload-before', [App\Http\Controllers\FeatureDetailController::class, 'uploadBeforeImage'])->name('features.upload-before');
+Route::post('/features/{item}/upload-after', [App\Http\Controllers\FeatureDetailController::class, 'uploadAfterImage'])->name('features.upload-after');
+Route::post('/features/{item}/upload-demo', [App\Http\Controllers\FeatureDetailController::class, 'uploadDemoGif'])->name('features.upload-demo');
+Route::post('/features/{item}/upload-screenshot', [App\Http\Controllers\FeatureDetailController::class, 'uploadScreenshot'])->name('features.upload-screenshot');
+Route::delete('/media/{media}', [App\Http\Controllers\FeatureDetailController::class, 'deleteMedia'])->name('media.delete');
+
+// Manual Generator (توليد الأدلة)
+Route::get('/manuals', [App\Http\Controllers\ManualGeneratorController::class, 'index'])->name('manuals.index');
+Route::post('/manuals/generate', [App\Http\Controllers\ManualGeneratorController::class, 'generate'])->name('manuals.generate');
+Route::get('/manuals/{manual}', [App\Http\Controllers\ManualGeneratorController::class, 'show'])->name('manuals.show');
+Route::post('/manuals/{manual}/publish', [App\Http\Controllers\ManualGeneratorController::class, 'publish'])->name('manuals.publish');
+Route::post('/manuals/{manual}/unpublish', [App\Http\Controllers\ManualGeneratorController::class, 'unpublish'])->name('manuals.unpublish');
+Route::get('/manuals/{manual}/export-pdf', [App\Http\Controllers\ManualGeneratorController::class, 'exportPdf'])->name('manuals.export-pdf');
+Route::get('/manuals/{manual}/export-word', [App\Http\Controllers\ManualGeneratorController::class, 'exportWord'])->name('manuals.export-word');
+Route::delete('/manuals/{manual}', [App\Http\Controllers\ManualGeneratorController::class, 'destroy'])->name('manuals.destroy');
+Route::post('/manuals/{manual}/send-to-alabasi', [App\Http\Controllers\ManualGeneratorController::class, 'sendToAlabasi'])->name('manuals.send-to-alabasi');
+Route::post('/manuals/preview', [App\Http\Controllers\ManualGeneratorController::class, 'preview'])->name('manuals.preview');
+
+// Update Logs (سجل التحديثات)
+Route::get('/updates', [App\Http\Controllers\UpdateLogController::class, 'index'])->name('updates.index');
+Route::get('/updates/{update}', [App\Http\Controllers\UpdateLogController::class, 'show'])->name('updates.show');
+Route::post('/updates', [App\Http\Controllers\UpdateLogController::class, 'store'])->name('updates.store');
+Route::put('/updates/{update}', [App\Http\Controllers\UpdateLogController::class, 'update'])->name('updates.update');
+Route::delete('/updates/{update}', [App\Http\Controllers\UpdateLogController::class, 'destroy'])->name('updates.destroy');
+Route::post('/updates/sync-git', [App\Http\Controllers\UpdateLogController::class, 'syncWithGit'])->name('updates.sync-git');
+Route::get('/updates/export', [App\Http\Controllers\UpdateLogController::class, 'export'])->name('updates.export');
+
 // Conversation routes
 Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index']);
 Route::post('/conversations', [App\Http\Controllers\ConversationController::class, 'store']);
