@@ -6,6 +6,7 @@ use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ChangelogController;
+use App\Http\Controllers\RoadmapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,11 @@ Route::get('/backup/download/{filename}', [BackupController::class, 'download'])
 
 // Changelog (سجل التحديثات)
 Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
+
+// Roadmap (خارطة الطريق)
+Route::get('/roadmap', [RoadmapController::class, 'index'])->name('roadmap');
+Route::post('/roadmap/{item}/status', [RoadmapController::class, 'updateStatus'])->name('roadmap.update-status');
+Route::post('/roadmap/{item}/progress', [RoadmapController::class, 'updateProgress'])->name('roadmap.update-progress');
 
 // Conversation routes
 Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index']);
