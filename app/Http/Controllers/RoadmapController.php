@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RoadmapItem;
+use App\Models\FeatureDetail;
+use App\Models\UpdateLog;
 use Illuminate\Http\Request;
 
 class RoadmapController extends Controller
@@ -10,11 +12,13 @@ class RoadmapController extends Controller
     /**
      * Display the roadmap page
      */
-    public function index()
+    public function index(Request $request)
     {
-        $alabasiItems = RoadmapItem::byProject('alabasi');
-        $integrationItems = RoadmapItem::byProject('integration');
-        $wakeelItems = RoadmapItem::byProject('wakeel');
+        $project = $request->get('project', 'all');
+        
+        $alabasiItems = RoadmapItem::byProject('alabasi')->with('featureDetail')->get();
+        $integrationItems = RoadmapItem::byProject('integration')->with('featureDetail')->get();
+        $wakeelItems = RoadmapItem::byProject('wakeel')->with('featureDetail')->get();
 
         // حساب الإحصائيات
         $stats = [
@@ -22,8 +26,24 @@ class RoadmapController extends Controller
             'integration' => $this->calculateStats($integrationItems),
             'wakeel' => $this->calculateStats($wakeelItems),
         ];
+        
+        // آخر التحديثات
+        $recentUpdates = UpdateLog::with('roadmapItem')
+            ->orderBy('committed_at', 'desc')
+            ->limit(10)
+            ->get();
 
-        return view('roadmap', compact('alabasiItems', 'integrationItems', 'wakeelItems', 'stats'));
+        return view('roadmap.index', compact('alabasiItems', 'integrationItems', 'wakeelItems', 'stats', 'recentUpdates', 'project'));
+    }
+
+    /**
+     * Show feature details
+     */
+    public function show(RoadmapItem $item)
+    {
+        $item->load(['featureDetail.media', 'updateLogs']);
+        
+        return view('roadmap.show', compact('item'));
     }
 
     /**
@@ -83,13 +103,20 @@ class RoadmapController extends Controller
         $totalProgress = $items->sum('progress');
         $averageProgress = $total > 0 ? round($totalProgress / $total, 1) : 0;
 
+        // عدد الميزات التي لها تفاصيل كاملة
+        $withDetails = $items->filter(function($item) {
+            return $item->featureDetail && $item->featureDetail->isComplete();
+        })->count();
+
         return [
             'total' => $total,
             'completed' => $completed,
             'in_progress' => $inProgress,
             'pending' => $pending,
+            'with_details' => $withDetails,
             'completion_rate' => $total > 0 ? round(($completed / $total) * 100, 1) : 0,
             'average_progress' => $averageProgress,
+            'details_rate' => $total > 0 ? round(($withDetails / $total) * 100, 1) : 0,
         ];
     }
 }

@@ -46,6 +46,7 @@ Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog
 
 // Roadmap (خارطة الطريق)
 Route::get('/roadmap', [RoadmapController::class, 'index'])->name('roadmap');
+Route::get('/roadmap/{item}', [RoadmapController::class, 'show'])->name('roadmap.show');
 Route::post('/roadmap/{item}/status', [RoadmapController::class, 'updateStatus'])->name('roadmap.update-status');
 Route::post('/roadmap/{item}/progress', [RoadmapController::class, 'updateProgress'])->name('roadmap.update-progress');
 
