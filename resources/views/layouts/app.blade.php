@@ -41,24 +41,18 @@
                 <a href="{{ route('backup') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('backup') ? 'bg-white/20' : '' }}">
                     💾 النسخ الاحتياطي
                 </a>
-                <div>
-                    <button class="dropdown-toggle w-full text-right px-4 py-3 rounded-lg {{ request()->routeIs('roadmap*') ? 'bg-white/20' : '' }} hover:bg-white/10" onclick="toggleDropdown()">
-                        🗺️ خارطة الطريق
-                    </button>
-                    <div class="dropdown-content {{ request()->routeIs('roadmap*') ? 'active' : '' }} pr-4">
-                        <a href="{{ route('roadmap.alabasi') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.alabasi') ? 'bg-white/20' : '' }}">
-                            💼 النظام المحاسبي
-                        </a>
-                        <a href="{{ route('roadmap.wakeel') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.wakeel') ? 'bg-white/20' : '' }}">
-                            🤖 نظام الوكيل
-                        </a>
-                        <a href="{{ route('roadmap.integration') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.integration') ? 'bg-white/20' : '' }}">
-                            🔗 التكامل
-                        </a>
-                    </div>
-                </div>
+
+                <a href="{{ route('roadmap') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('roadmap*') ? 'bg-white/20' : '' }}">
+                    🗺️ خارطة الطريق
+                </a>
+                <a href="{{ route('manuals.index') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('manuals*') ? 'bg-white/20' : '' }}">
+                    📖 توليد الأدلة
+                </a>
+                <a href="{{ route('updates.index') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('updates*') ? 'bg-white/20' : '' }}">
+                    🕒 سجل التحديثات
+                </a>
                 <a href="{{ route('changelog') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('changelog') ? 'bg-white/20' : '' }}">
-                    📋 سجل التحديثات
+                    📋 Changelog
                 </a>
             </nav>
         </aside>
