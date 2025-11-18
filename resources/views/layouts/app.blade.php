@@ -37,6 +37,9 @@
                 <a href="{{ route('backup') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('backup') ? 'bg-white/20' : '' }}">
                     💾 النسخ الاحتياطي
                 </a>
+                <a href="{{ route('roadmap') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('roadmap') ? 'bg-white/20' : '' }}">
+                    🗺️ خارطة الطريق
+                </a>
                 <a href="{{ route('changelog') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('changelog') ? 'bg-white/20' : '' }}">
                     📋 سجل التحديثات
                 </a>
