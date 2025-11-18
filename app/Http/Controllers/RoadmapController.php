@@ -37,6 +37,60 @@ class RoadmapController extends Controller
     }
 
     /**
+     * Display Alabasi roadmap
+     */
+    public function alabasi()
+    {
+        $items = RoadmapItem::byProject('alabasi')->with('featureDetail')->get();
+        $stats = $this->calculateStats($items);
+        $recentUpdates = UpdateLog::with('roadmapItem')
+            ->whereHas('roadmapItem', function($q) {
+                $q->where('project', 'alabasi');
+            })
+            ->orderBy('committed_at', 'desc')
+            ->limit(10)
+            ->get();
+        
+        return view('roadmap.project', compact('items', 'stats', 'recentUpdates'))->with('project', 'alabasi');
+    }
+
+    /**
+     * Display Wakeel roadmap
+     */
+    public function wakeel()
+    {
+        $items = RoadmapItem::byProject('wakeel')->with('featureDetail')->get();
+        $stats = $this->calculateStats($items);
+        $recentUpdates = UpdateLog::with('roadmapItem')
+            ->whereHas('roadmapItem', function($q) {
+                $q->where('project', 'wakeel');
+            })
+            ->orderBy('committed_at', 'desc')
+            ->limit(10)
+            ->get();
+        
+        return view('roadmap.project', compact('items', 'stats', 'recentUpdates'))->with('project', 'wakeel');
+    }
+
+    /**
+     * Display Integration roadmap
+     */
+    public function integration()
+    {
+        $items = RoadmapItem::byProject('integration')->with('featureDetail')->get();
+        $stats = $this->calculateStats($items);
+        $recentUpdates = UpdateLog::with('roadmapItem')
+            ->whereHas('roadmapItem', function($q) {
+                $q->where('project', 'integration');
+            })
+            ->orderBy('committed_at', 'desc')
+            ->limit(10)
+            ->get();
+        
+        return view('roadmap.project', compact('items', 'stats', 'recentUpdates'))->with('project', 'integration');
+    }
+
+    /**
      * Show feature details
      */
     public function show(RoadmapItem $item)

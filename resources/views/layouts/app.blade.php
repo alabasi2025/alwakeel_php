@@ -42,9 +42,25 @@
                     💾 النسخ الاحتياطي
                 </a>
 
-                <a href="{{ route('roadmap') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('roadmap*') ? 'bg-white/20' : '' }}">
-                    🗺️ خارطة الطريق
-                </a>
+                <div>
+                    <button class="dropdown-toggle w-full text-right px-4 py-3 rounded-lg {{ request()->routeIs('roadmap*') ? 'bg-white/20' : '' }} hover:bg-white/10" onclick="toggleRoadmapDropdown()">
+                        🗺️ خارطة الطريق
+                    </button>
+                    <div id="roadmapDropdown" class="dropdown-content {{ request()->routeIs('roadmap*') ? 'active' : '' }} pr-4">
+                        <a href="{{ route('roadmap') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap') && !request()->has('project') ? 'bg-white/20' : '' }}">
+                            🌐 الكل
+                        </a>
+                        <a href="{{ route('roadmap.alabasi') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.alabasi') ? 'bg-white/20' : '' }}">
+                            💼 النظام المحاسبي
+                        </a>
+                        <a href="{{ route('roadmap.wakeel') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.wakeel') ? 'bg-white/20' : '' }}">
+                            🤖 نظام الوكيل
+                        </a>
+                        <a href="{{ route('roadmap.integration') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.integration') ? 'bg-white/20' : '' }}">
+                            🔗 التكامل
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('manuals.index') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('manuals*') ? 'bg-white/20' : '' }}">
                     📖 توليد الأدلة
                 </a>
@@ -66,6 +82,13 @@
         function toggleDropdown() {
             const content = document.querySelector('.dropdown-content');
             const toggle = document.querySelector('.dropdown-toggle');
+            content.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+        
+        function toggleRoadmapDropdown() {
+            const content = document.getElementById('roadmapDropdown');
+            const toggle = event.currentTarget;
             content.classList.toggle('active');
             toggle.classList.toggle('active');
         }
