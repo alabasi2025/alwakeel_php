@@ -45,7 +45,9 @@ Route::get('/backup/download/{filename}', [BackupController::class, 'download'])
 Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
 
 // Roadmap (خارطة الطريق)
-Route::get('/roadmap', [RoadmapController::class, 'index'])->name('roadmap');
+Route::get('/roadmap/alabasi', [RoadmapController::class, 'alabasi'])->name('roadmap.alabasi');
+Route::get('/roadmap/wakeel', [RoadmapController::class, 'wakeel'])->name('roadmap.wakeel');
+Route::get('/roadmap/integration', [RoadmapController::class, 'integration'])->name('roadmap.integration');
 Route::post('/roadmap/{item}/status', [RoadmapController::class, 'updateStatus'])->name('roadmap.update-status');
 Route::post('/roadmap/{item}/progress', [RoadmapController::class, 'updateProgress'])->name('roadmap.update-progress');
 

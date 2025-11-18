@@ -11,6 +11,10 @@
         .sidebar { width: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .sidebar a { transition: all 0.3s; }
         .sidebar a:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
+        .dropdown-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .dropdown-content.active { max-height: 500px; }
+        .dropdown-toggle::after { content: '▼'; font-size: 0.7em; margin-right: 8px; transition: transform 0.3s; }
+        .dropdown-toggle.active::after { transform: rotate(180deg); }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -37,9 +41,22 @@
                 <a href="{{ route('backup') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('backup') ? 'bg-white/20' : '' }}">
                     💾 النسخ الاحتياطي
                 </a>
-                <a href="{{ route('roadmap') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('roadmap') ? 'bg-white/20' : '' }}">
-                    🗺️ خارطة الطريق
-                </a>
+                <div>
+                    <button class="dropdown-toggle w-full text-right px-4 py-3 rounded-lg {{ request()->routeIs('roadmap*') ? 'bg-white/20' : '' }} hover:bg-white/10" onclick="toggleDropdown()">
+                        🗺️ خارطة الطريق
+                    </button>
+                    <div class="dropdown-content {{ request()->routeIs('roadmap*') ? 'active' : '' }} pr-4">
+                        <a href="{{ route('roadmap.alabasi') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.alabasi') ? 'bg-white/20' : '' }}">
+                            💼 النظام المحاسبي
+                        </a>
+                        <a href="{{ route('roadmap.wakeel') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.wakeel') ? 'bg-white/20' : '' }}">
+                            🤖 نظام الوكيل
+                        </a>
+                        <a href="{{ route('roadmap.integration') }}" class="block px-4 py-2 rounded-lg mt-1 {{ request()->routeIs('roadmap.integration') ? 'bg-white/20' : '' }}">
+                            🔗 التكامل
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('changelog') }}" class="block px-4 py-3 rounded-lg {{ request()->routeIs('changelog') ? 'bg-white/20' : '' }}">
                     📋 سجل التحديثات
                 </a>
@@ -51,5 +68,13 @@
             @yield('content')
         </main>
     </div>
+    <script>
+        function toggleDropdown() {
+            const content = document.querySelector('.dropdown-content');
+            const toggle = document.querySelector('.dropdown-toggle');
+            content.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
