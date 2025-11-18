@@ -104,4 +104,28 @@ class RoadmapItem extends Model
             $this->markAsInProgress();
         }
     }
+
+    /**
+     * العلاقة مع تفاصيل الميزة
+     */
+    public function featureDetail()
+    {
+        return $this->hasOne(FeatureDetail::class);
+    }
+
+    /**
+     * العلاقة مع سجل التحديثات
+     */
+    public function updateLogs()
+    {
+        return $this->hasMany(UpdateLog::class);
+    }
+
+    /**
+     * التحقق من وجود تفاصيل
+     */
+    public function hasDetails()
+    {
+        return $this->featureDetail !== null && $this->featureDetail->isComplete();
+    }
 }
