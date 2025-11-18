@@ -162,13 +162,16 @@ class RoadmapController extends Controller
             return $item->featureDetail && $item->featureDetail->isComplete();
         })->count();
 
+        $percentage = $total > 0 ? round(($completed / $total) * 100, 1) : 0;
+        
         return [
             'total' => $total,
             'completed' => $completed,
             'in_progress' => $inProgress,
             'pending' => $pending,
+            'percentage' => $percentage,
             'with_details' => $withDetails,
-            'completion_rate' => $total > 0 ? round(($completed / $total) * 100, 1) : 0,
+            'completion_rate' => $percentage,
             'average_progress' => $averageProgress,
             'details_rate' => $total > 0 ? round(($withDetails / $total) * 100, 1) : 0,
         ];
