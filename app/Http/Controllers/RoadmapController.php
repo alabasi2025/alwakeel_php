@@ -8,51 +8,22 @@ use Illuminate\Http\Request;
 class RoadmapController extends Controller
 {
     /**
-     * Display Alabasi roadmap
+     * Display the roadmap page
      */
-    public function alabasi()
+    public function index()
     {
-        $items = RoadmapItem::byProject('alabasi');
-        $stats = $this->calculateStats($items);
-        $project = [
-            'name' => 'نظام الأباسي المحاسبي',
-            'icon' => '💼',
-            'description' => 'Laravel 10 + PHP 8.2 | https://alabasi.es',
-            'type' => 'alabasi'
-        ];
-        return view('roadmap-single', compact('items', 'stats', 'project'));
-    }
+        $alabasiItems = RoadmapItem::byProject('alabasi');
+        $integrationItems = RoadmapItem::byProject('integration');
+        $wakeelItems = RoadmapItem::byProject('wakeel');
 
-    /**
-     * Display Wakeel roadmap
-     */
-    public function wakeel()
-    {
-        $items = RoadmapItem::byProject('wakeel');
-        $stats = $this->calculateStats($items);
-        $project = [
-            'name' => 'نظام الوكيل الذكي',
-            'icon' => '🤖',
-            'description' => 'AI-Powered Assistant | التعلم الذاتي',
-            'type' => 'wakeel'
+        // حساب الإحصائيات
+        $stats = [
+            'alabasi' => $this->calculateStats($alabasiItems),
+            'integration' => $this->calculateStats($integrationItems),
+            'wakeel' => $this->calculateStats($wakeelItems),
         ];
-        return view('roadmap-single', compact('items', 'stats', 'project'));
-    }
 
-    /**
-     * Display Integration roadmap
-     */
-    public function integration()
-    {
-        $items = RoadmapItem::byProject('integration');
-        $stats = $this->calculateStats($items);
-        $project = [
-            'name' => 'الربط والتكامل',
-            'icon' => '🔗',
-            'description' => 'API Integration | الوكيل ↔ الأباسي',
-            'type' => 'integration'
-        ];
-        return view('roadmap-single', compact('items', 'stats', 'project'));
+        return view('roadmap', compact('alabasiItems', 'integrationItems', 'wakeelItems', 'stats'));
     }
 
     /**
